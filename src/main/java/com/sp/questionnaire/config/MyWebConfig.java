@@ -22,7 +22,7 @@ public class MyWebConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AdminInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new AdminInterceptor()).addPathPatterns("/*");
         super.addInterceptors(registry);
     }
     /**
@@ -34,7 +34,7 @@ public class MyWebConfig extends WebMvcConfigurerAdapter {
         registry.addMapping("/**")
                 .allowCredentials(true)
                 .allowedHeaders("*")
-                //.allowedOrigins("http://192.168.1.100:8080")
+                .allowedOrigins("http://127.0.0.1:8080")
                 .allowedMethods("*")
                 .maxAge(36000);
     }

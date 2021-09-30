@@ -1,4 +1,4 @@
-package com.sp.questionnaire.web;
+package com.sp.questionnaire.controller;
 
 
 import com.sp.questionnaire.entity.Paper;

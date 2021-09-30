@@ -1,4 +1,4 @@
-package com.sp.questionnaire.web;
+package com.sp.questionnaire.controller;
 
 
 import com.sp.questionnaire.entity.Answer;
@@ -17,7 +17,6 @@ import com.sp.questionnaire.utils.MailUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.*;
@@ -36,7 +36,7 @@ import java.util.*;
  * Email : cpwu@foxmail.com
  * 2018-09-15 Saturday 09:43
  */
-@Controller
+@RestController
 public class UserController {
     @Autowired
     private UserService userService;
@@ -59,14 +59,20 @@ public class UserController {
     /**
      * <P>注册接口 </p>
      *
-     * @param user： 映射的实体对象，result：参数校验的结果对象
+     * @param： 映射的实体对象，result：参数校验的结果对象
      * @return JSON字符串
      */
+    @RequestMapping(value = "/world", method = RequestMethod.GET)
+    @ResponseBody
+    public String returnJson(String name) {
+        System.out.println("name : " + name);
+        return "hello";
+    }
     @ResponseBody//加这个表示返回的是纯文本数据
     @RequestMapping(value = "/api/v1/register", method = RequestMethod.POST)
     public Map<String, Object> register(HttpServletRequest request, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException, MessagingException {
         //System.out.println("register: " + request.getSession().getId());
-        //System.out.println(user);
+        System.out.println(user);
         Map<String, Object> map = new HashMap<>();
         if (result.hasErrors()) {
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误

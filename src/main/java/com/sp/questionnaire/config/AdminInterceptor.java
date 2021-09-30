@@ -64,7 +64,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 
         //controller方法调用之前
         String url = request.getRequestURI();
-        //System.out.println("admin preHandler: " + url);
+
 
         String tokenHeader = request.getHeader("token");
 
