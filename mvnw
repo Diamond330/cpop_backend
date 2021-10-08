@@ -42,6 +42,7 @@ if [ -z "$MAVEN_SKIP_RC" ] ; then
 
   if [ -f "$HOME/.mavenrc" ] ; then
     . "$HOME/.mavenrc"
+
   fi
 
 fi

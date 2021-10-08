@@ -12,10 +12,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -39,6 +36,7 @@ public class PaperController {
 
     //获取问卷列表
     @ResponseBody
+    @CrossOrigin
     @RequestMapping(value = "api/v1/admin/paper-lists", method = RequestMethod.GET)
     public Map<String, Object> paperLists(HttpServletRequest request) throws ParseException {
         Map<String, Object> map = new HashMap<>();
@@ -49,7 +47,7 @@ public class PaperController {
 //        request.setAttribute("session", request.getSession());
 
         User user = (User) request.getAttribute("admin");
-        String userId = user.getId();
+        String userId = "7663a6072dca49afabe12bb4797b7623";
 
         //Cookie[] tokens = request.getCookies();
 
@@ -204,7 +202,7 @@ public class PaperController {
         //删除Paper
         if (paper.getId() == null) {
             //插入代码
-            map = paperMethodHelp.insertPaper(addPaperViewPaper, user.getId(), null);
+            map = paperMethodHelp.insertPaper(addPaperViewPaper, "7663a6072dca49afabe12bb4797b7623", null);
             if ((int) map.get("code") == 0) {
                 map.put("data", 0);
             }

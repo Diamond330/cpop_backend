@@ -25,7 +25,7 @@ public class MailUtilsTest {
     @Test
     public void sendMail() throws MessagingException {
         String receiver = "2943884288@qq.com";
-        String nickName = "蓝色司机";
+        String nickName = "蓝色司b机";
         String code = "1234567";
 
         mailUtils.sendActivateMail(receiver, nickName,code);
