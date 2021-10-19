@@ -290,7 +290,7 @@ startTime  |String|Y         | -          |survey start time
 endTime    |String|Y         | -          |survey end time
 
 
-### 2.2 查看问卷
+### 2.2 Survey Lookup
 #### Interface path
 ```
 domain/api/v1/admin/view-paper
@@ -306,7 +306,7 @@ HTTP	POST
 > #### Request Parameters
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-id    |String|Y         | -         | 问卷id
+id    |String|Y         | -         | survey ID
 
 #### Response Parameters
 Response Examples
@@ -316,15 +316,15 @@ Response Examples
   "msg": "ok",
   "data": {
    "id": "4askfj1093jfi9348oueir932",
-   "title": "你幸福吗的调查",
+   "title": "Introduction Survey",
    "status": 0,
    "createTime": 1536887397173,
    "startTime": "2018-09-12",
    "endTime": "2018-10-01",   
    "questions": [
-      {"id": "1234", "questionType":1, "questionTitle": "你的收入是多少？", "questionOption": ["2000以下", "2000-5000", "5000+"]},
-      {"id": "2234", "questionType":2, "questionTitle": "你家里有哪些家电？", "questionOption": ["冰箱", "洗衣机", "空调", "麻将机"]},
-      {"id": "3234", "questionType":3, "questionTitle": "说一说你觉得最幸福的事", "questionOption": []}
+      {"id": "1234", "questionType":1, "questionTitle": "Blockage/Conjestion of Nose？", "questionOption": ["No Problem", "Mild Problem", "Severe Problem"]},
+      {"id": "2234", "questionType":2, "questionTitle": "Runny Nose？", "questionOption": ["Very Mild Problem", "Moderate Problem", "Severe Problem", "As bad as it can be"]},
+      {"id": "3234", "questionType":3, "questionTitle": "Smoking History?", "questionOption": []}
     ]
    }
 }
