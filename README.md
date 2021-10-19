@@ -101,20 +101,18 @@ data  |int   |N         | -          |Result Data
 #### codeExplanation
 Status |Explanation
 :---  |:---  
--1    |token失效或未登录（用于需要登录后才能进行的操作）
-0     |请求成功（全文适用，下文不再赘述）
-1     |系统异常（全文适用，下文不再赘述）
-2     |Parameters不正确（全文适用，下文不再赘述）
-> #### code的补充
-* code非0时，无dataParameters，可通过msg判断问题原因
-* code取0时，若data中有值，则dataParameters存在，否则无dataParameters
+-1    |token failure
+0     |request successful
+1     |system error
+2     |parameter incorrect
+
 
 #### dataExplanation
-状态值 |Explanation
+Status |Explanation
 :---  |:---  
-0     |注册成功，等待邮件激活
-1     |邮箱已被注册过且被激活
-2     |邮箱被注册过，但未激活，重新发送激活邮件
+0     |register success
+1     |email already in use
+2     |email registered but not confirmed
 
 
 ### 1.2 激活
