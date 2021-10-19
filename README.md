@@ -115,7 +115,7 @@ Status |Explanation
 2     |email registered but not confirmed
 
 
-### 1.2 激活
+### 1.2 Activation
 #### Interface path
 ```
 domain/api/v1/activate
@@ -137,7 +137,7 @@ code  |String|Y| - |activation
 2. Otherwise，jump to invalid page
 
 
-### 1.3 登录
+### 1.3 Log In
 #### Interface path
 ```
 domain/api/v1/login
@@ -154,13 +154,13 @@ HTTP	POST
 > #### Request Parameters
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-email   |String|Y| 5-64个字符 |邮箱
-password|String|Y| 6-64个字符 |登录密码
+email   |String|Y| 5-64个字符 |email
+password|String|Y| 6-64个字符 |password
 
 #### Response Parameters
 Response Examples
 ```
-//登录成功
+//successfully logged in
 {
   "code": 0,
   "msg": "ok",
@@ -171,7 +171,7 @@ Response Examples
     "email": "abc@gmail.com
   }
 }
-//登录失败
+//fail
 {
   "code": 0,
   "msg": "password error",
@@ -183,28 +183,28 @@ Response Examples
 > #### ParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
-code  |int   |Y         | -          |请求状态码
-msg   |String|Y         | -          |消息提示
-data  |Object|N         | -          |结果
+code  |int   |Y         | -          |HTTP Request
+msg   |String|Y         | -          |Message
+data  |Object|N         | -          |Result
 
 
 #### dataExplanation
 Parameters    |	Type	  | Required |	Range	| Explanation
 :---    |:---    |:---      |:---       |:---
-result  |int     |Y         | -         |结果
-token   |String  |N          | -        |**登陆成功后用于身份识别，凡请求的URL中含`admin`都需要将token放入请求header**
-username|String  |N          | -        |昵称
-email   |String  |N          | -        |邮箱
+result  |int     |Y         | -         |Result
+token   |String  |N          | -        |**Identification after successful login**
+username|String  |N          | -        |name
+email   |String  |N          | -        |email
 
 #### resultExplanation
 取值 |Explanation
 :---  |:---  
-0     |登录成功
-1     |密码错误
-2     |用户不存在
-3     |账号未激活
+0     |successfully logged in
+1     |password error
+2     |user does not exit
+3     |account not activated
 
-> header使用token示例
+> header use token example
 ```
     ...
     headers: {'token': token }
@@ -212,7 +212,7 @@ email   |String  |N          | -        |邮箱
 ```
 
 
-### 1.4 退出登录
+### 1.4 Sign Out
 #### Interface path
 ```
 domain/api/v1/admin/logout
@@ -220,9 +220,9 @@ domain/api/v1/admin/logout
 #### Request Type
 HTTP	GET
 #### Request Examples
-无
+None
 > #### Request Parameters
-无
+None
 
 #### Response Parameters
 Response Examples
@@ -236,13 +236,13 @@ Response Examples
 > #### ParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
-code  |int   |Y         | -          |请求状态码
-msg   |String|Y         | -          |消息提示
-data  |int   |N         | -          |结果：0.退出成功，1.失败（未登录或登录已超时）
+code  |int   |Y         | -          |HTTP Request
+msg   |String|Y         | -          |Message
+data  |int   |N         | -          |Result：0.Logged out，1.Failed
 
 
 
-## 2.问卷相关
+## 2.Survey Related
 ### 2.1 管理员获取问卷列表
 #### Interface path
 ```
