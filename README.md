@@ -57,10 +57,10 @@ answer_option|varchar|512| not  |     |     |   |答题选项<br>1：选择题�
 
 # API 
 
-编码方式均为UTF-8
+Encoding Method: UTF-8
 
-## 1.管理员相关
-### 1.1 注册
+## 1.Administrator related
+### 1.1 Registrar
 #### Interface path
 ```
 domain/api/v1/register
@@ -78,9 +78,9 @@ HTTP	POST
 > #### Request Parameters
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-username|String|Y| 2-64个字符 |用户名（昵称）
-password|String|Y| 6-64个字符 |登录密码
-email   |String|Y| 5-64个字符且格式正确 |邮箱
+username|String|Y| 2-64 characters |username
+password|String|Y| 6-64 characters |password
+email   |String|Y| 5-64个characters and correct format |email
 
 #### Response Parameters
 Response Examples
@@ -94,12 +94,12 @@ Response Examples
 > #### ParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
-code  |int   |Y         | -          |请求状态码
-msg   |String|Y         | -          |消息提示
-data  |int   |N         | -          |结果数据
+code  |int   |Y         | -          |Request HTTP
+msg   |String|Y         | -          |Message
+data  |int   |N         | -          |Result Data
 
 #### codeExplanation
-状态值 |Explanation
+Status |Explanation
 :---  |:---  
 -1    |token失效或未登录（用于需要登录后才能进行的操作）
 0     |请求成功（全文适用，下文不再赘述）
@@ -131,14 +131,12 @@ domain/api/v1/activate/code
 > #### Request Parameters
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-code  |String|Y| - |激活码(即随机码）
+code  |String|Y| - |activation
 
-#### Response Parameters
-无
 
 #### Explanation
-1. 若激活成功，跳转success页面 
-2. 若激活码已失效，跳转invalid页面
+1. If success, jump to success page
+2. Otherwise，jump to invalid page
 
 
 ### 1.3 登录
@@ -763,4 +761,4 @@ domain/template.xls
 
   
 
-![image](https://user-images.githubusercontent.com/89793199/137832926-cfa64dc5-4d13-4377-90b3-15126c66b3b6.png)
+![image](https://user-images.githubusercontent.com/89793199/137832695-c4699b44-af1a-45bf-9dee-806de73b65c0.png)
