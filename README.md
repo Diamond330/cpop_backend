@@ -11,7 +11,7 @@
 # 数据库名称：questionnaire
 字符集：UTF-8
 ## user表
-字段         | 类型 | 长度 |Null| 默认 | 主键 | 唯一 | 说明
+字段         | Type | 长度 |Null| 默认 | 主键 | 唯一 | Explanation
 :---        |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
 id          |varchar|64| not  |     | Y    |   |用户ID
 username    |varchar|64| not  |     |     |   |用户昵称
@@ -23,7 +23,7 @@ status      |int| | not  | 0    |     |   |用户账号状态<br>0：未激活<b
 random_code |varchar|64| not  |     |     |Y   |随机码（用户激活邮箱）
 
 ## paper表
-字段 | 类型 | 长度 |Null| 默认 | 主键 | 唯一 | 说明
+字段 | Type | 长度 |Null| 默认 | 主键 | 唯一 | Explanation
 :--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
 id   |varchar|64| not  |     | Y    |   |问卷ID
 user_id|varchar|64| not  |     |     |   |用户ID，外键
@@ -34,22 +34,22 @@ start_time|datetime| | null  | null   |     |   |开始时间
 end_time|datetime| | null  | null  |     |   |截止时间
 
 ## question表
-字段 | 类型 | 长度 |Null| 默认 | 主键 | 唯一 | 说明
+字段 | Type | 长度 |Null| 默认 | 主键 | 唯一 | Explanation
 :--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
 id   |varchar|64| not  |     | Y    |   |问题ID
 paper_id|varchar|64| not  |     |     |   |问卷ID，外键
 create_time|datetime| | not  |     |     |   |问题创建时间
-question_type|int| | not  |    |     |   |问题类型<br>1：单选<br>2：多选<br>3：简答
+question_type|int| | not  |    |     |   |问题Type<br>1：单选<br>2：多选<br>3：简答
 question_title|varchar|128| not  |     |     |   |问题标题
 question_option|varchar|512| not  |     |     |   |问题选项<br>1：选择题，数组字符串<br>[option1,option2,option3...]<br>2：简答题，空数组字符串<br>[]
 
 ## answer表
-字段 | 类型 | 长度 |Null| 默认 | 主键 | 唯一 | 说明
+字段 | Type | 长度 |Null| 默认 | 主键 | 唯一 | Explanation
 :--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- 
 id   |varchar|64| not  |     | Y    |   |答案ID
 paper_id|varchar|64| not  |     |     |   |问卷ID，外键
 question_id|varchar|64| not  |     |     |   |问题ID，外键
-question_type|int| | not  |    |     |   |问题类型<br>1：单选<br>2：多选<br>3：简答
+question_type|int| | not  |    |     |   |问题Type<br>1：单选<br>2：多选<br>3：简答
 create_time|datetime| | not  |     |     |   |答题时间
 answer_option|varchar|512| not  |     |     |   |答题选项<br>1：选择题，来自question表的问题选项，单选题只有一个option，多选至少一个<br>[option1,option2,option3...]<br>2：简答题，至多一个元素的数组字符串<br>["只能有一个元素"]<br>若未达，则无元素<br>[]
 
@@ -61,13 +61,13 @@ answer_option|varchar|512| not  |     |     |   |答题选项<br>1：选择题�
 
 ## 1.管理员相关
 ### 1.1 注册
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/register
 ```
-#### 请求方式
+#### Request Type
 HTTP	POST
-#### 请求示例
+#### Request Examples
 ```
 {
   "username": "Alice",
@@ -75,15 +75,15 @@ HTTP	POST
   "email": "alice@gmail.com"
 }
 ```
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 username|String|Y| 2-64个字符 |用户名（昵称）
 password|String|Y| 6-64个字符 |登录密码
 email   |String|Y| 5-64个字符且格式正确 |邮箱
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
   "code": 0,
@@ -91,26 +91,26 @@ email   |String|Y| 5-64个字符且格式正确 |邮箱
   "data": 0
 }
 ```
-> #### 参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### ParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
 code  |int   |Y         | -          |请求状态码
 msg   |String|Y         | -          |消息提示
 data  |int   |N         | -          |结果数据
 
-#### code说明
-状态值 |说明
+#### codeExplanation
+状态值 |Explanation
 :---  |:---  
 -1    |token失效或未登录（用于需要登录后才能进行的操作）
 0     |请求成功（全文适用，下文不再赘述）
 1     |系统异常（全文适用，下文不再赘述）
-2     |参数不正确（全文适用，下文不再赘述）
+2     |Parameters不正确（全文适用，下文不再赘述）
 > #### code的补充
-* code非0时，无data参数，可通过msg判断问题原因
-* code取0时，若data中有值，则data参数存在，否则无data参数
+* code非0时，无dataParameters，可通过msg判断问题原因
+* code取0时，若data中有值，则dataParameters存在，否则无dataParameters
 
-#### data说明
-状态值 |说明
+#### dataExplanation
+状态值 |Explanation
 :---  |:---  
 0     |注册成功，等待邮件激活
 1     |邮箱已被注册过且被激活
@@ -118,51 +118,51 @@ data  |int   |N         | -          |结果数据
 
 
 ### 1.2 激活
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/activate
 ```
-#### 请求方式
+#### Request Type
 HTTP	GET
-请求示例
+Request Examples
 ```
 domain/api/v1/activate/code
 ```
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 code  |String|Y| - |激活码(即随机码）
 
-#### 返回参数
+#### Response Parameters
 无
 
-#### 说明
+#### Explanation
 1. 若激活成功，跳转success页面 
 2. 若激活码已失效，跳转invalid页面
 
 
 ### 1.3 登录
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/login
 ```
-#### 请求方式
+#### Request Type
 HTTP	POST
-#### 请求示例
+#### Request Examples
 ```
 {  
   "email": "alice@gmail.com"，
   "password": "123456"  
 }
 ```
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 email   |String|Y| 5-64个字符 |邮箱
 password|String|Y| 6-64个字符 |登录密码
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 //登录成功
 {
@@ -184,24 +184,24 @@ password|String|Y| 6-64个字符 |登录密码
   }
 }
 ```
-> #### 参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### ParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
 code  |int   |Y         | -          |请求状态码
 msg   |String|Y         | -          |消息提示
 data  |Object|N         | -          |结果
 
 
-#### data说明
-参数    |	类型	  | 是否必须 |	取值范围	| 说明
+#### dataExplanation
+Parameters    |	Type	  | Required |	Range	| Explanation
 :---    |:---    |:---      |:---       |:---
 result  |int     |Y         | -         |结果
 token   |String  |N          | -        |**登陆成功后用于身份识别，凡请求的URL中含`admin`都需要将token放入请求header**
 username|String  |N          | -        |昵称
 email   |String  |N          | -        |邮箱
 
-#### result说明
-取值 |说明
+#### resultExplanation
+取值 |Explanation
 :---  |:---  
 0     |登录成功
 1     |密码错误
@@ -217,19 +217,19 @@ email   |String  |N          | -        |邮箱
 
 
 ### 1.4 退出登录
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/admin/logout
 ```
-#### 请求方式
+#### Request Type
 HTTP	GET
-#### 请求示例
+#### Request Examples
 无
-> #### 请求参数
+> #### Request Parameters
 无
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
   "code": 0,
@@ -237,8 +237,8 @@ HTTP	GET
   "data": 0
 }
 ```
-> #### 参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### ParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
 code  |int   |Y         | -          |请求状态码
 msg   |String|Y         | -          |消息提示
@@ -248,18 +248,18 @@ data  |int   |N         | -          |结果：0.退出成功，1.失败（未�
 
 ## 2.问卷相关
 ### 2.1 管理员获取问卷列表
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/admin/paper-lists
 ```
-#### 请求方式
+#### Request Type
 HTTP    GET
-#### 请求示例
+#### Request Examples
 无
-> #### 请求参数
+> #### Request Parameters
 无
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 //成功
 {
@@ -283,8 +283,8 @@ HTTP    GET
   "msg": "token expired or not login",
 }
 ```
-> #### 参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### ParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
 id    |String|Y         | -          |问卷ID
 title |String|Y         | -          |问卷标题
@@ -295,25 +295,25 @@ endTime    |String|Y         | -          |问卷结束日期，若未设置则�
 
 
 ### 2.2 查看问卷
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/admin/view-paper
 ```
-#### 请求方式
+#### Request Type
 HTTP	POST
-#### 请求示例
+#### Request Examples
 ```
 {
   "id": "4askfj1093jfi9348oueir932"
 }
 ```
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 id    |String|Y         | -         | 问卷id
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
   "code": 0,
@@ -333,8 +333,8 @@ id    |String|Y         | -         | 问卷id
    }
 }
 ```
-> #### data参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### dataParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 id    |String|Y         | -          |问卷ID
 title |String|Y         | -          |问卷标题
@@ -344,24 +344,24 @@ startTime  |String|Y         | -          |问卷开达日期，若未设置则�
 endTime    |String|Y         | -          |问卷结束日期，若未设置则是空字符串
 questions  |Array |Y         | -          |问题列表     
 
-> #### questions参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### questionsParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 id    |String|Y         | -          |问题ID
-questionType  |int   |Y      | -     |问题类型：1.单选题，2.多选题，3.简答题
+questionType  |int   |Y      | -     |问题Type：1.单选题，2.多选题，3.简答题
 questionTitle |String|Y      | -     |问题标题
 questionOption|Array |Y      | -     |问题选项：简答题为空的Array
 
 
 ### 2.3 新增问卷
-#### 接口地址
+#### interface path
 ```
 //与更新问卷共用接口
 domain/api/v1/admin/update-paper
 ```
-#### 请求方式
+#### Request Type
 HTTP	POST
-#### 请求示例
+#### Request Examples
 ```
 {
   "title": "你幸福吗的调查",
@@ -375,23 +375,23 @@ HTTP	POST
   ]
 }
 ```
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 title       |String|Y| 2-64个字符 | 问卷名称
 startTime  |String|Y| 10个字符   | 开始日期，若未设置则是空字符串
 endTime    |String|Y| 10个字符   | 结束日期，若未设置则是空字符串
 status      |int   |Y| 0或1     | 问卷状态，0：不发布仅保存；1：发布（此时start_time和end_time必须有合法取值）；
 
-> #### questions参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### questionsParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-questionType  |int   |Y      | -           |问题类型：1.单选题，2.多选题，3.简答题
+questionType  |int   |Y      | -           |问题Type：1.单选题，2.多选题，3.简答题
 questionTitle |String|Y      | 1-128字符   |问题标题
 questionOption|Array |Y      | -     |问题选项， 是选择题则至少有两个元素，简答题无元素
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
   "code": 0,
@@ -399,26 +399,26 @@ questionOption|Array |Y      | -     |问题选项， 是选择题则至少有�
   "data": 0
 }
 ```
-> #### 参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### ParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
 code  |int   |Y         | -          |-1.token失效或未登录，0.请求成功，1.系统异常
 msg   |String|Y         | -          |提示消息
 data  |int   |N         | -          |0.成功
 
 ### 2.4 修改问卷
-#### 接口地址
+#### interface path
 ```
-//与新增问卷共用接口，仅多一个参数id
+//与新增问卷共用接口，仅多一个Parametersid
 domain/api/v1/admin/update-paper
 ```
-#### 请求方式
+#### Request Type
 HTTP	POST
-#### 请求示例
+#### Request Examples
 ```
 //页面中的数据来自view-paper接口，若管理员选择更新，则删除原id的paper的问题，再为该id的paper插入questions的新题目
 {
-   "id": "4askfj1093jfi9348oueir932",   //在add-paper中无此参数
+   "id": "4askfj1093jfi9348oueir932",   //在add-paper中无此Parameters
    "title": "你幸福吗的调查",
    "status": 0,
    "startTime": "2018-09-12",
@@ -431,9 +431,9 @@ HTTP	POST
    }
 }
 ```
-> #### 请求参数
-> #### 参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+> #### ParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 id    |String|Y         | -          |问卷ID
 title |String|Y         | -          |问卷标题
@@ -442,15 +442,15 @@ startTime  |String|Y         | -          |问卷开达日期，若未设置则�
 endTime    |String|Y         | -          |问卷结束日期，若未设置则是空字符串
 questions  |Array |Y         | -          |问题列表     
 
-> #### questions参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### questionsParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-questionType  |int   |Y      | -     |问题类型：1.单选题，2.多选题，3.简答题
+questionType  |int   |Y      | -     |问题Type：1.单选题，2.多选题，3.简答题
 questionTitle |String|Y      | -     |问题标题
 questionOption|Array |Y      | -     |问题选项， 是选择题则至少有两个元素，简答题无元素
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
     "code": 0,
@@ -458,32 +458,32 @@ questionOption|Array |Y      | -     |问题选项， 是选择题则至少有�
     "data": 0
 }
 ```
-> #### data参数说明
- 参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### dataParametersExplanation
+ Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---  |:---      |:---        |:---
  data  |int   |Y         | -          |0.操作成功，1.操作失败，2.paper的id非法（无此问卷)
 
 
 ### 2.5 删除问卷
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/admin/delete-paper
 ```
-#### 请求方式
+#### Request Type
 HTTP	POST
-#### 请求示例
+#### Request Examples
 ```
 {
   "idList": ["4askfj1093jfi9348oueir932", "sfs6f465vfsdf65sf654s6sf"]
 }
 ```
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 idList    |Array|Y         | -         | 问卷id列表，至少一个元素
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
   "code": 0,
@@ -491,29 +491,29 @@ idList    |Array|Y         | -         | 问卷id列表，至少一个元素
   "data": 0
 }
 ```
-> #### data参数说明
- 参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### dataParametersExplanation
+ Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---  |:---      |:---        |:---
  data  |int   |Y         | -          |0.操作成功，1.操作失败，2.paper的id非法（无此问卷)
 
 
 
 ### 2.6 用户查看问卷（答卷页面）
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/user/view-paper?id=4askfj1093jfi9348oueir932
 ```
-#### 请求方式
+#### Request Type
 HTTP	GET
-#### 请求示例
+#### Request Examples
 无
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 id    |String|Y         | -         | 问卷id
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
   "code": 0,
@@ -533,8 +533,8 @@ id    |String|Y         | -         | 问卷id
    }
 }
 ```
-> #### data参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### dataParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 status|int   |Y         | -          |问卷状态：0.未发布，1.发布中（可作答），2.已结束，3.无此问卷，4.已发布但未到开始时间
 id    |String|N         | -          |问卷ID
@@ -544,29 +544,29 @@ startTime  |String|N         | -          |问卷开达日期，若未设置则�
 endTime    |String|N         | -          |问卷结束日期，若未设置则是空字符串
 questions  |Array |N         | -          |问题列表     
 
-> #### questions参数说明
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### questionsParametersExplanation
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 id    |String|Y         | -          |问题ID
-questionType  |int   |Y      | -     |问题类型：1.单选题，2.多选题，3.简答题
+questionType  |int   |Y      | -     |问题Type：1.单选题，2.多选题，3.简答题
 questionTitle |String|Y      | -     |问题标题
 questionOption|Array |Y      | -     |问题选项， 是选择题则至少有两个元素，简答题无元素
 
-> #### 补充说明
-1. status为必须参数
-2. 若status为0或3，则data中除status外无其他参数
-3. 若status为1，data中包含全部参数，用户可正常作答
+> #### 补充Explanation
+1. status为必须Parameters
+2. 若status为0或3，则data中除status外无其他Parameters
+3. 若status为1，data中包含全部Parameters，用户可正常作答
 4. 若status为2或4，data中只包含title、startTime、endTime，用于提示用户
 
 
 ### 2.7 提交问卷答案
-#### 接口地址
+#### interface path
 ```
 domain/api/v1/user/commit-paper
 ```
-#### 请求方式
+#### Request Type
 HTTP	POST
-#### 请求示例
+#### Request Examples
 ```
 //页面中的数据来自view-paper接口
 {
@@ -579,29 +579,29 @@ HTTP	POST
    }
 }
 ```
-> #### 请求参数
-参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### Request Parameters
+Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
 id    |String|Y         | -          |问卷ID
 answers  |Array |Y         | -       |答案列表  
 
-> #### answers参数说明
-参数           |类型	  | 是否必须 |	取值范围	| 说明
+> #### answersParametersExplanation
+Parameters           |Type	  | Required |	Range	| Explanation
 :---           |:---  |:---     |:---          |:---
 id             |String|Y         | -          |问题id
-questionType   |int   |Y         | -          |问题类型：1.单选，2.多选，3.简答
+questionType   |int   |Y         | -          |问题Type：1.单选，2.多选，3.简答
 answerContent  |-     |Y         | 0-512字符  |答题选项， 是选择题则至少有一个元素，简答题最多一个元素（不答则为无元素）
 
-#### 返回参数
-返回示例
+#### Response Parameters
+Response Examples
 ```
 {
     "code": 0,
     "msg": "ok"
 }
 ```
-> #### data参数说明
- 参数  |	类型	| 是否必须 |	取值范围	| 说明
+> #### dataParametersExplanation
+ Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---  |:---      |:---        |:---
  code  |int   |Y         | -          |0.操作成功，1.操作失败,2.问卷id无效
 
@@ -613,25 +613,25 @@ answerContent  |-     |Y         | 0-512字符  |答题选项， 是选择题则
 
 
  ### 2.8 查看问卷数据
- #### 接口地址
+ #### interface path
  ```
  domain/api/v1/admin/paper-data
  ```
- #### 请求方式
+ #### Request Type
  HTTP	POST
- #### 请求示例
+ #### Request Examples
  ```
  {
    "id": "4askfj1093jfi9348oueir932"
  }
  ```
- > #### 请求参数
- 参数  |	类型	| 是否必须 |	取值范围	| 说明
+ > #### Request Parameters
+ Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---|:---|:---|:---
  id    |String|Y         | -         | 问卷id
 
- #### 返回参数
- 返回示例
+ #### Response Parameters
+ Response Examples
  ```
  {
    "code": 0,
@@ -680,8 +680,8 @@ answerContent  |-     |Y         | 0-512字符  |答题选项， 是选择题则
     }
  }
  ```
- > #### data参数说明
- 参数  |	类型	| 是否必须 |	取值范围	| 说明
+ > #### dataParametersExplanation
+ Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---|:---|:---|:---
  id    |String|Y         | -          |问卷ID
  title |String|Y         | -          |问卷标题
@@ -692,11 +692,11 @@ answerContent  |-     |Y         | 0-512字符  |答题选项， 是选择题则
  totalCount |int   |Y         | -          |问卷被达总次数（人次）
  questions  |Array |Y         | -          |问题列表     
 
- > #### questions参数说明
- 参数  |	类型	| 是否必须 |	取值范围	| 说明
+ > #### questionsParametersExplanation
+ Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---|:---|:---|:---
  id    |String|Y         | -          |问题ID
- questionType  |int   |Y      | -     |问题类型：1.单选题，2.多选题，3.简答题
+ questionType  |int   |Y      | -     |问题Type：1.单选题，2.多选题，3.简答题
  questionTitle |String|Y      | -     |问题标题
  questionOption|Array |Y      | -     |问题选项，选择题是Array，简答题为空字符串
  answerContent |Array |Y      | -     |答案内容，选择题中的元素为int，简答题为String
@@ -718,35 +718,35 @@ domain/template.xls
 
 
  ### 2.10 上传问卷模板文件生成问卷
- #### 接口地址
+ #### interface path
  ```
  domain/api/v1/admin/upload
  ```
- #### 请求方式
+ #### Request Type
  HTTP	POST
- #### 请求示例
+ #### Request Examples
  ```
  {
     "file": FILE    //文件
  }
  ```
- > #### 请求参数
- 参数  |	类型	| 是否必须 |	取值范围	| 说明
+ > #### Request Parameters
+ Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---|:---|:---|:---
  file  |FILE|Y         | -          |文件模板文件(Excel)
 
  
 
- #### 返回参数
- 返回示例
+ #### Response Parameters
+ Response Examples
  ```
  {
      "code": 0,
      "msg": "ok"
  }
  ```
- > #### data参数说明
-  参数  |	类型	| 是否必须 |	取值范围	| 说明
+ > #### dataParametersExplanation
+  Parameters  |	Type	| Required |	Range	| Explanation
   :---  |:---  |:---      |:---        |:---
   code  |int   |Y         | -          |0.操作成功，1.系统异常，2.文件不合法
 
@@ -757,9 +757,10 @@ domain/template.xls
   0     | ok     
   1     | 异常的具体信息
   2     | 未选择文件！   
-  2     | 文件类型不支持！
+  2     | 文件Type不支持！
   2     | 文件大小限制在100KB以内！
   2     | 文件转换失败，请注意格式要求！
 
   
 
+![image](https://user-images.githubusercontent.com/89793199/137832591-6a128788-01cf-4385-907b-4fca833e3188.png)
