@@ -459,41 +459,8 @@ Response Examples
  data  |int   |Y         | -          |0.success，1.failed，2.survey does not exist
 
 
-### 2.5 删除问卷
-#### Interface path
-```
-domain/api/v1/admin/delete-paper
-```
-#### Request Type
-HTTP	POST
-#### Request Examples
-```
-{
-  "idList": ["4askfj1093jfi9348oueir932", "sfs6f465vfsdf65sf654s6sf"]
-}
-```
-> #### Request Parameters
-Parameters  |	Type	| Required |	Range	| Explanation
-:---  |:---|:---|:---|:---
-idList    |Array|Y         | -         | 问卷id列表，至少一个元素
 
-#### Response Parameters
-Response Examples
-```
-{
-  "code": 0,
-  "msg": "ok",
-  "data": 0
-}
-```
-> #### dataParametersExplanation
- Parameters  |	Type	| Required |	Range	| Explanation
- :---  |:---  |:---      |:---        |:---
- data  |int   |Y         | -          |0.操作成功，1.操作失败，2.paper的id非法（无此问卷)
-
-
-
-### 2.6 用户查看问卷（答卷页面）
+### 2.6 User Lookup（Survey）
 #### Interface path
 ```
 domain/api/v1/user/view-paper?id=4askfj1093jfi9348oueir932
@@ -505,7 +472,7 @@ HTTP	GET
 > #### Request Parameters
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-id    |String|Y         | -         | 问卷id
+id    |String|Y         | -         | survey id
 
 #### Response Parameters
 Response Examples
@@ -514,16 +481,16 @@ Response Examples
   "code": 0,
   "msg": "ok",
   "data": {
-   "status": 0,     //只有status为1时才可作答
+   "status": 0,     //only be able to respond when "1"
    "id": "4askfj1093jfi9348oueir932",
-   "title": "你幸福吗的调查",   
+   "title": "SNOT-22",   
    "createTime": 1536887397173,
    "startTime": "2018-09-12",
    "endTime": "2018-10-01",
    "questions": [
-      {"id": "1234", "questionType":1, "questionTitle": "你的收入是多少？", "questionOption": ["2000以下", "2000-5000", "5000+"]},
-      {"id": "2234", "questionType":2, "questionTitle": "你家里有哪些家电？", "questionOption": ["冰箱", "洗衣机", "空调", "麻将机"]},
-      {"id": "3234", "questionType":3, "questionTitle": "说一说你觉得最幸福的事", "questionOption": []}
+      {"id": "1234", "questionType":1, "questionTitle": "Blockage/Conjestion of Nose？", "questionOption": ["No Problem", "Mild Problem", "Severe Problem"]},
+      {"id": "2234", "questionType":2, "questionTitle": "Runny Nose？", "questionOption": ["Very Mild Problem", "Moderate Problem", "Severe Problem", "As bad as it can be"]},
+      {"id": "3234", "questionType":3, "questionTitle": "Smoking History?", "questionOption": []}
     ]
    }
 }
@@ -531,27 +498,21 @@ Response Examples
 > #### dataParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-status|int   |Y         | -          |问卷状态：0.未发布，1.发布中（可作答），2.已结束，3.无此问卷，4.已发布但未到开始时间
-id    |String|N         | -          |问卷ID
-title |String|N         | -          |问卷标题
-createTime|long  |N          | -          |问卷创建时的时间戳
-startTime  |String|N         | -          |问卷开达日期，若未设置则是空字符串
-endTime    |String|N         | -          |问卷结束日期，若未设置则是空字符串
-questions  |Array |N         | -          |问题列表     
+status|int   |Y         | -          |survey status：0.not posted，1.posting，2.finished，3.not existed，4.posted but not started
+id    |String|N         | -          |survey ID
+title |String|N         | -          |survey title
+createTime|long  |N          | -          |survey created time
+startTime  |String|N         | -          |start time
+endTime    |String|N         | -          |end time
+questions  |Array |N         | -          |question list     
 
 > #### questionsParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-id    |String|Y         | -          |问题ID
-questionType  |int   |Y      | -     |问题Type：1.单选题，2.多选题，3.简答题
-questionTitle |String|Y      | -     |问题标题
-questionOption|Array |Y      | -     |问题选项， 是选择题则至少有两个元素，简答题无元素
-
-> #### 补充Explanation
-1. status为必须Parameters
-2. 若status为0或3，则data中除status外无其他Parameters
-3. 若status为1，data中包含全部Parameters，用户可正常作答
-4. 若status为2或4，data中只包含title、startTime、endTime，用于提示用户
+id    |String|Y         | -          |question ID
+questionType  |int   |Y      | -     |question type：1.single choice，2.multiple choice，3.short answer
+questionTitle |String|Y      | -     |question tile
+questionOption|Array |Y      | -     |question choices
 
 
 ### 2.7 提交问卷答案
@@ -563,7 +524,7 @@ domain/api/v1/user/commit-paper
 HTTP	POST
 #### Request Examples
 ```
-//页面中的数据来自view-paper接口
+//data from view-paper
 {
    "id": "4askfj1093jfi9348oueir932",
    "answers": [
