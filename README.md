@@ -349,10 +349,10 @@ questionTitle |String|Y      | -     |question title
 questionOption|Array |Y      | -     |question options：short answer would be an empty array
 
 
-### 2.3 新增问卷
+### 2.3 Add New Survey
 #### Interface path
 ```
-//与更新问卷共用接口
+//shared port
 domain/api/v1/admin/update-paper
 ```
 #### Request Type
@@ -360,31 +360,31 @@ HTTP	POST
 #### Request Examples
 ```
 {
-  "title": "你幸福吗的调查",
+  "title": "SNOT-22",
   "startTime": "2018-09-12",
   "endTime": "2018-10-01",
   "status": 0,
   "questions": [
-      {"questionType":1, "questionTitle": "你的收入是多少？", "questionOption": ["2000以下", "2000-5000", "5000+"]},
-      {"questionType":2, "questionTitle": "你家里有哪些家电？", "questionOption": ["冰箱", "洗衣机", "空调", "麻将机"]},
-      {"questionType":3, "questionTitle": "说一说你觉得最幸福的事", "questionOption": []}
+      {"id": "1234", "questionType":1, "questionTitle": "Blockage/Conjestion of Nose？", "questionOption": ["No Problem", "Mild Problem", "Severe Problem"]},
+      {"id": "2234", "questionType":2, "questionTitle": "Runny Nose？", "questionOption": ["Very Mild Problem", "Moderate Problem", "Severe Problem", "As bad as it can be"]},
+      {"id": "3234", "questionType":3, "questionTitle": "Smoking History?", "questionOption": []}
   ]
 }
 ```
 > #### Request Parameters
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-title       |String|Y| 2-64个字符 | 问卷名称
-startTime  |String|Y| 10个字符   | 开始日期，若未设置则是空字符串
-endTime    |String|Y| 10个字符   | 结束日期，若未设置则是空字符串
-status      |int   |Y| 0或1     | 问卷状态，0：不发布仅保存；1：发布（此时start_time和end_time必须有合法取值）；
+title       |String|Y| 2-64个字符 | survey name
+startTime  |String|Y| 10个字符   | start time
+endTime    |String|Y| 10个字符   | end time
+status      |int   |Y| 0或1     | survey status，0：not posted；1：posted；
 
 > #### questionsParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-questionType  |int   |Y      | -           |问题Type：1.单选题，2.多选题，3.简答题
-questionTitle |String|Y      | 1-128字符   |问题标题
-questionOption|Array |Y      | -     |问题选项， 是选择题则至少有两个元素，简答题无元素
+questionType  |int   |Y      | -           |question type：1.single choice，2.multiple choice，3.short answer
+questionTitle |String|Y      | 1-128 characters   |question title
+questionOption|Array |Y      | -     |question options
 
 #### Response Parameters
 Response Examples
@@ -398,31 +398,30 @@ Response Examples
 > #### ParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
-code  |int   |Y         | -          |-1.token失效或未登录，0.请求成功，1.系统异常
-msg   |String|Y         | -          |提示消息
-data  |int   |N         | -          |0.成功
+code  |int   |Y         | -          |-1.token failed，0. success，1.error
+msg   |String|Y         | -          |message
+data  |int   |N         | -          |0. success
 
-### 2.4 修改问卷
+### 2.4 Survey Modification
 #### Interface path
 ```
-//与新增问卷共用接口，仅多一个Parametersid
+//share port，with extra Parametersid
 domain/api/v1/admin/update-paper
 ```
 #### Request Type
 HTTP	POST
 #### Request Examples
 ```
-//页面中的数据来自view-paper接口，若管理员选择更新，则删除原id的paper的问题，再为该id的paper插入questions的新题目
 {
-   "id": "4askfj1093jfi9348oueir932",   //在add-paper中无此Parameters
-   "title": "你幸福吗的调查",
+   "id": "4askfj1093jfi9348oueir932", 
+   "title": "SNOT-22",
    "status": 0,
    "startTime": "2018-09-12",
    "endTime": "2018-10-01",   
    "questions": [
-      {"questionType":1, "questionTitle": "你的收入是多少？", "questionOption": ["2000以下", "2000-5000", "5000+"]},
-      {"questionType":2, "questionTitle": "你家里有哪些家电？", "questionOption": ["冰箱", "洗衣机", "空调", "麻将机"]},
-      {"questionType":3, "questionTitle": "说一说你觉得最幸福的事", "questionOption": []}
+      {"id": "1234", "questionType":1, "questionTitle": "Blockage/Conjestion of Nose？", "questionOption": ["No Problem", "Mild Problem", "Severe Problem"]},
+      {"id": "2234", "questionType":2, "questionTitle": "Runny Nose？", "questionOption": ["Very Mild Problem", "Moderate Problem", "Severe Problem", "As bad as it can be"]},
+      {"id": "3234", "questionType":3, "questionTitle": "Smoking History?", "questionOption": []}
     ]
    }
 }
@@ -431,19 +430,19 @@ HTTP	POST
 > #### ParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-id    |String|Y         | -          |问卷ID
-title |String|Y         | -          |问卷标题
-status|int   |Y         | -          |问卷状态：0.未发布，1.发布
-startTime  |String|Y         | -          |问卷开达日期，若未设置则是空字符串
-endTime    |String|Y         | -          |问卷结束日期，若未设置则是空字符串
-questions  |Array |Y         | -          |问题列表     
+id    |String|Y         | -          |surtey ID
+title |String|Y         | -          |survey title
+status|int   |Y         | -          |survey status：0.not posted，1.posted
+startTime  |String|Y         | -          |start time
+endTime    |String|Y         | -          |end time
+questions  |Array |Y         | -          |question list     
 
 > #### questionsParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-questionType  |int   |Y      | -     |问题Type：1.单选题，2.多选题，3.简答题
-questionTitle |String|Y      | -     |问题标题
-questionOption|Array |Y      | -     |问题选项， 是选择题则至少有两个元素，简答题无元素
+questionType  |int   |Y      | -     |question time：1.single choice，2.multiple choice，3.short answer
+questionTitle |String|Y      | -     |question title
+questionOption|Array |Y      | -     |question options
 
 #### Response Parameters
 Response Examples
@@ -457,7 +456,7 @@ Response Examples
 > #### dataParametersExplanation
  Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---  |:---      |:---        |:---
- data  |int   |Y         | -          |0.操作成功，1.操作失败，2.paper的id非法（无此问卷)
+ data  |int   |Y         | -          |0.success，1.failed，2.survey does not exist
 
 
 ### 2.5 删除问卷
