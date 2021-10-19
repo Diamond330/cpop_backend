@@ -528,9 +528,9 @@ HTTP	POST
 {
    "id": "4askfj1093jfi9348oueir932",
    "answers": [
-      {"id": "1234", "questionType":1,  "answerContent": ["2000-5000"]},  //单选题，Array中仅一个元素
-      {"id": "2234", "questionType":2,  "answerContent": ["空调", "麻将机"]},  //多选，Array中至少一个元素
-      {"id": "3234", "questionType":3,  "answerContent": ["上了王者"]}  //简答
+      {"id": "1234", "questionType":1,  "answerContent": ["No Problem"]},  //single
+      {"id": "2234", "questionType":2,  "answerContent": ["Mild Problem", "Severe Problem"]},  //multiple
+      {"id": "3234", "questionType":3,  "answerContent": ["No Smoking History"]}  //short answer
     ]
    }
 }
@@ -538,15 +538,15 @@ HTTP	POST
 > #### Request Parameters
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-id    |String|Y         | -          |问卷ID
-answers  |Array |Y         | -       |答案列表  
+id    |String|Y         | -          |survey ID
+answers  |Array |Y         | -       |answer list  
 
 > #### answersParametersExplanation
 Parameters           |Type	  | Required |	Range	| Explanation
 :---           |:---  |:---     |:---          |:---
-id             |String|Y         | -          |问题id
-questionType   |int   |Y         | -          |问题Type：1.单选，2.多选，3.简答
-answerContent  |-     |Y         | 0-512字符  |答题选项， 是选择题则至少有一个元素，简答题最多一个元素（不答则为无元素）
+id             |String|Y         | -          |question id
+questionType   |int   |Y         | -          |question type：1.single choice，2.multiple choice，3.short answer
+answerContent  |-     |Y         | 0-512 characters  |question options
 
 #### Response Parameters
 Response Examples
@@ -559,7 +559,7 @@ Response Examples
 > #### dataParametersExplanation
  Parameters  |	Type	| Required |	Range	| Explanation
  :---  |:---  |:---      |:---        |:---
- code  |int   |Y         | -          |0.操作成功，1.操作失败,2.问卷id无效
+ code  |int   |Y         | -          |0.success，1.fail,2.survey ID invalid
 
  
 
