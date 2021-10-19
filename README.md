@@ -61,7 +61,7 @@ answer_option|varchar|512| not  |     |     |   |答题选项<br>1：选择题�
 
 ## 1.管理员相关
 ### 1.1 注册
-#### interface path
+#### Interface path
 ```
 domain/api/v1/register
 ```
@@ -118,7 +118,7 @@ data  |int   |N         | -          |结果数据
 
 
 ### 1.2 激活
-#### interface path
+#### Interface path
 ```
 domain/api/v1/activate
 ```
@@ -142,7 +142,7 @@ code  |String|Y| - |激活码(即随机码）
 
 
 ### 1.3 登录
-#### interface path
+#### Interface path
 ```
 domain/api/v1/login
 ```
@@ -217,7 +217,7 @@ email   |String  |N          | -        |邮箱
 
 
 ### 1.4 退出登录
-#### interface path
+#### Interface path
 ```
 domain/api/v1/admin/logout
 ```
@@ -248,7 +248,7 @@ data  |int   |N         | -          |结果：0.退出成功，1.失败（未�
 
 ## 2.问卷相关
 ### 2.1 管理员获取问卷列表
-#### interface path
+#### Interface path
 ```
 domain/api/v1/admin/paper-lists
 ```
@@ -295,7 +295,7 @@ endTime    |String|Y         | -          |问卷结束日期，若未设置则�
 
 
 ### 2.2 查看问卷
-#### interface path
+#### Interface path
 ```
 domain/api/v1/admin/view-paper
 ```
@@ -354,7 +354,7 @@ questionOption|Array |Y      | -     |问题选项：简答题为空的Array
 
 
 ### 2.3 新增问卷
-#### interface path
+#### Interface path
 ```
 //与更新问卷共用接口
 domain/api/v1/admin/update-paper
@@ -407,7 +407,7 @@ msg   |String|Y         | -          |提示消息
 data  |int   |N         | -          |0.成功
 
 ### 2.4 修改问卷
-#### interface path
+#### Interface path
 ```
 //与新增问卷共用接口，仅多一个Parametersid
 domain/api/v1/admin/update-paper
@@ -465,7 +465,7 @@ Response Examples
 
 
 ### 2.5 删除问卷
-#### interface path
+#### Interface path
 ```
 domain/api/v1/admin/delete-paper
 ```
@@ -499,7 +499,7 @@ Response Examples
 
 
 ### 2.6 用户查看问卷（答卷页面）
-#### interface path
+#### Interface path
 ```
 domain/api/v1/user/view-paper?id=4askfj1093jfi9348oueir932
 ```
@@ -560,7 +560,7 @@ questionOption|Array |Y      | -     |问题选项， 是选择题则至少有�
 
 
 ### 2.7 提交问卷答案
-#### interface path
+#### Interface path
 ```
 domain/api/v1/user/commit-paper
 ```
@@ -613,7 +613,7 @@ Response Examples
 
 
  ### 2.8 查看问卷数据
- #### interface path
+ #### Interface path
  ```
  domain/api/v1/admin/paper-data
  ```
@@ -718,7 +718,7 @@ domain/template.xls
 
 
  ### 2.10 上传问卷模板文件生成问卷
- #### interface path
+ #### Interface path
  ```
  domain/api/v1/admin/upload
  ```
@@ -763,4 +763,4 @@ domain/template.xls
 
   
 
-![image](https://user-images.githubusercontent.com/89793199/137832591-6a128788-01cf-4385-907b-4fca833e3188.png)
+![image](https://user-images.githubusercontent.com/89793199/137832695-c4699b44-af1a-45bf-9dee-806de73b65c0.png)
