@@ -515,7 +515,7 @@ questionTitle |String|Y      | -     |question tile
 questionOption|Array |Y      | -     |question choices
 
 
-### 2.7 提交问卷答案
+### 2.7 Submit questionnaire answers
 #### Interface path
 ```
 domain/api/v1/user/commit-paper
