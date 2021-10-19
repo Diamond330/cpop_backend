@@ -243,7 +243,7 @@ data  |int   |N         | -          |Result：0.Logged out，1.Failed
 
 
 ## 2.Survey Related
-### 2.1 管理员获取问卷列表
+### 2.1 How des admin access surveys
 #### Interface path
 ```
 domain/api/v1/admin/paper-lists
@@ -251,29 +251,29 @@ domain/api/v1/admin/paper-lists
 #### Request Type
 HTTP    GET
 #### Request Examples
-无
+None
 > #### Request Parameters
-无
+None
 #### Response Parameters
 Response Examples
 ```
-//成功
+//success
 {
   "code": 0,
   "msg": "ok",
   "data": [
-    {"id": "12345678910","title": "问卷", "status": 0, "createTime": 1536887397173, "startTime": "2018-09-20", "endTime": "2018-10-01"},
-    {"id": "22345678910","title": "问卷标题", "status": 1, "createTime": 1536887397666, "startTime": "2018-09-10", "endTime": "2018-10-01"},
-    {"id": "32345678910","title": "问题", "status": 2, "createTime": 1536887397888, "startTime": "2018-09-10", "endTime": "2018-09-12"},
-    {"id": "42345678910","title": "标题", "status": 0, "createTime": 1536887397173, "startTime": "", "endTime": ""}
+    {"id": "12345678910","title": "survey", "status": 0, "createTime": 1536887397173, "startTime": "2018-09-20", "endTime": "2018-10-01"},
+    {"id": "22345678910","title": "survey title", "status": 1, "createTime": 1536887397666, "startTime": "2018-09-10", "endTime": "2018-10-01"},
+    {"id": "32345678910","title": "question", "status": 2, "createTime": 1536887397888, "startTime": "2018-09-10", "endTime": "2018-09-12"},
+    {"id": "42345678910","title": "question title", "status": 0, "createTime": 1536887397173, "startTime": "", "endTime": ""}
   ]
 }
-//失败
+//fail
 { 
   "code": 1,
   "msg": "server exception"
 }
-//token过期或未登录，下同
+//token expired or failed
 { 
   "code": -1,
   "msg": "token expired or not login",
@@ -282,12 +282,12 @@ Response Examples
 > #### ParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---  |:---      |:---        |:---
-id    |String|Y         | -          |问卷ID
-title |String|Y         | -          |问卷标题
-status|int   |Y         | -          |问卷状态：0.未发布，1.已发布，2.已结束
-createTime|long  |Y         | -          |问卷创建时的时间戳
-startTime  |String|Y         | -          |问卷开达日期，若未设置则是空字符串
-endTime    |String|Y         | -          |问卷结束日期，若未设置则是空字符串
+id    |String|Y         | -          |survey ID
+title |String|Y         | -          |survey title
+status|int   |Y         | -          |survey status：0.not published，1.published，2.ended
+createTime|long  |Y         | -          |created time stamp
+startTime  |String|Y         | -          |survey start time
+endTime    |String|Y         | -          |survey end time
 
 
 ### 2.2 查看问卷
