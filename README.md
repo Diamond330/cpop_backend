@@ -332,21 +332,21 @@ Response Examples
 > #### dataParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-id    |String|Y         | -          |问卷ID
-title |String|Y         | -          |问卷标题
-status|int   |Y         | -          |问卷状态：0.未发布，1.已发布，2.已结束
-createTime|long  |Y          | -          |问卷创建时的时间戳
-startTime  |String|Y         | -          |问卷开达日期，若未设置则是空字符串
-endTime    |String|Y         | -          |问卷结束日期，若未设置则是空字符串
-questions  |Array |Y         | -          |问题列表     
+id    |String|Y         | -          |survey ID
+title |String|Y         | -          |survey title
+status|int   |Y         | -          |survey status：0.not published，1.published，2.ended
+createTime|long  |Y          | -          |created time stamp
+startTime  |String|Y         | -          |survey start time
+endTime    |String|Y         | -          |survey end time
+questions  |Array |Y         | -          |question list     
 
 > #### questionsParametersExplanation
 Parameters  |	Type	| Required |	Range	| Explanation
 :---  |:---|:---|:---|:---
-id    |String|Y         | -          |问题ID
-questionType  |int   |Y      | -     |问题Type：1.单选题，2.多选题，3.简答题
-questionTitle |String|Y      | -     |问题标题
-questionOption|Array |Y      | -     |问题选项：简答题为空的Array
+id    |String|Y         | -          |question ID
+questionType  |int   |Y      | -     |question type：1.single choice，2.multiple choice，3.short answer
+questionTitle |String|Y      | -     |question title
+questionOption|Array |Y      | -     |question options：short answer would be an empty array
 
 
 ### 2.3 新增问卷
