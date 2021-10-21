@@ -460,7 +460,7 @@ Response Examples
 
 
 
-### 2.6 User Lookup（Survey）
+### 2.6 Patient Lookup Questionnaire
 #### Interface path
 ```
 domain/api/v1/user/view-paper?id=4askfj1093jfi9348oueir932
