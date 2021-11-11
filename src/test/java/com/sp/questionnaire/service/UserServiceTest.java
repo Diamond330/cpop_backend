@@ -49,6 +49,9 @@ public class UserServiceTest {
 
     @Test
     public void updateUser() {
+        int[] array=new int[5];
+        String subStr;
+
         List<String> b = new ArrayList<>();
         b.add("你好");
         b.add("我不好");

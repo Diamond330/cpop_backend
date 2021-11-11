@@ -52,7 +52,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
 
 */
-        //System.out.println("pre: " + request.getSession().getId());
+        System.out.println("pre: " + request.getSession().getId());
 
         //System.out.println("hd origin: " + request.getHeader("Origin"));
 

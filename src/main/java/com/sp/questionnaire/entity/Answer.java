@@ -7,8 +7,8 @@ import java.util.Date;
 
 /**
  * description:
- * Author:Xiaowanwan
- * Date:2018/9/13-10:43
+ * Author:Shuhao Dong
+ * Date:2021/9/13-10:43
  */
 
 @Getter
@@ -20,6 +20,7 @@ import java.util.Date;
 public class Answer {
 
     private String id;//答案ID
+    private String userId;
     private String paperId;// 试卷ID，外键
     private String questionId;//问题ID，外键
     private Integer questionType;//问题类型：1：单选题2：多选题3：简答题

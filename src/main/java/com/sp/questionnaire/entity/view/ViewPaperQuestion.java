@@ -8,8 +8,8 @@ import java.util.List;
 
 /**
  * description:查看问卷所定义的中间Question类，页面返回的是这个类对象
- * Author:Xiaowanwan
- * Date:2018/9/16-16:01
+ * Author:Shuhao Dong
+ * Date:2021/11/8-16:01
  */
 @Setter
 @Getter

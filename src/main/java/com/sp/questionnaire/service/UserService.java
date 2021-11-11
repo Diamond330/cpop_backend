@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
  * description:
- * Author:Xiaowanwan
- * Date:2018/9/13-10:52
+ * Author:Shuhao Dong
+ * Date:2021/9/13-10:52
  */
 public interface UserService {
     /**

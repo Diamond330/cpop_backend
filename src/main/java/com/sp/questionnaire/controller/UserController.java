@@ -82,6 +82,7 @@ public class UserController {
         }
         //user校验合法
         User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
+        System.out.println(user0.getEmail());
         if (user0 == null) {  //new user
             user.setId(commonUtils.getUUID())
                     .setPassword(commonUtils.encodeByMd5(user.getPassword()))
@@ -91,7 +92,7 @@ public class UserController {
                     .setRandomCode(commonUtils.getUUID());
             if (userService.insertUser(user)) {   //insert user success
                 //发送激活邮件
-                mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
+                //mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
                 map.put("code", 0);
                 map.put("msg", "ok");
                 map.put("data", 0);
@@ -100,15 +101,25 @@ public class UserController {
                 map.put("msg", "insert database fail");
             }
         } else {    // user exists
+
             if (user0.getStatus() == 0) {//user not activate
                 user.setId(user0.getId())
                         .setPassword(commonUtils.encodeByMd5(user.getPassword()))
                         .setCreateTime(user0.getCreateTime())
                         .setLastLoginTime(null)
                         .setStatus(0)
-                        .setRandomCode(commonUtils.getUUID());
+                        .setRandomCode(commonUtils.getUUID())
+                        .setName(user.getName())
+                        .setAge(user.getAge())
+                        .setSmokeHis(user.getSmokeHis())
+                        .setEtohHis(user.getEtohHis())
+                        .setComorbidity(user.getComorbidity())
+                        .setEducation(user.getEducation())
+                        .setRace(user.getRace())
+                        .setGender(user.getGender())
+                        .setIdentity(user.getIdentity());
                 if (userService.updateUser(user)) {
-                    mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
+                    //mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
                     map.put("code", 0);
                     map.put("msg", "ok");
                     map.put("data", 2);
@@ -127,6 +138,79 @@ public class UserController {
         }
         return map;
     }
+
+    @ResponseBody//加这个表示返回的是纯文本数据
+    @RequestMapping(value = "/api/v1/userupdate", method = RequestMethod.POST)
+    public Map<String, Object> userupdate(HttpServletRequest request, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException, MessagingException {
+        //System.out.println("register: " + request.getSession().getId());
+        System.out.println(user);
+        Map<String, Object> map = new HashMap<>();
+        if (result.hasErrors()) {
+            FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
+            map.put("msg", error.getDefaultMessage());//将错误信息放入msg
+            map.put("code", 2);
+            return map;
+        }
+        //user校验合法
+        System.out.println(user.getEmail());
+        User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
+        if (user0 == null) {  //new user
+            user.setId(commonUtils.getUUID())
+                    .setPassword(commonUtils.encodeByMd5(user.getPassword()))
+                    .setCreateTime(new Date())
+                    .setLastLoginTime(null)
+                    .setStatus(0)
+                    .setRandomCode(commonUtils.getUUID());
+            if (userService.insertUser(user)) {   //insert user success
+                //发送激活邮件
+                //mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
+                map.put("code", 0);
+                map.put("msg", "ok");
+                map.put("data", 0);
+            } else {
+                map.put("code", 1);
+                map.put("msg", "insert database fail");
+            }
+        } else {    // user exists
+            System.out.println(user0.getAge());
+            if (user0.getStatus() == 0||user0.getStatus() == 1) {//user not activate
+                user.setId(user0.getId())
+                        .setPassword(commonUtils.encodeByMd5(user.getPassword()))
+                        .setCreateTime(user0.getCreateTime())
+                        .setLastLoginTime(null)
+                        .setStatus(0)
+                        .setRandomCode(commonUtils.getUUID())
+                        .setName(user.getName())
+                        .setAge(user.getAge())
+                        .setSmokeHis(user.getSmokeHis())
+                        .setEtohHis(user.getEtohHis())
+                        .setComorbidity(user.getComorbidity())
+                        .setEducation(user.getEducation())
+                        .setRace(user.getRace())
+                        .setGender(user.getGender())
+                        .setIdentity(user.getIdentity());
+
+                if (userService.updateUser(user)) {
+                   // mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
+                    map.put("code", 0);
+                    map.put("msg", "ok");
+                    map.put("data", 2);
+                } else {
+                    map.put("code", 1);
+                    map.put("msg", "update database fail");
+                }
+//            } else if (user0.getStatus() == 1) {    //user is active
+//                map.put("code", 0);
+//                map.put("msg", "ok");
+//                map.put("data", 1);
+            } else {
+                map.put("code", 1);
+                map.put("msg", "error data");
+            }
+        }
+        return map;
+    }
+
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/login")
@@ -345,7 +429,10 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/commit-paper", method = RequestMethod.POST)
-    public Map<String, Object> userViewPaper(@Valid @RequestBody PaperAnswer answer, BindingResult result) {
+    public Map<String, Object> userViewPaper(@Valid @RequestBody PaperAnswer answer, BindingResult result,HttpServletRequest request) {
+        User user = (User) request.getAttribute("admin");
+        //String userId=user.getId();;
+        String userId = "7663a6072dca49afabe12bb4797b7623";
         Map<String, Object> map = new HashMap<>();
         if (result.hasErrors()) {
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
@@ -360,6 +447,7 @@ public class UserController {
             for (QuestionAnswer qa : answer.getAnswers()) {
                 Answer ans = new Answer();
                 ans.setId(commonUtils.getUUID())
+                        .setUserId(userId)
                         .setPaperId(paperId)
                         .setQuestionId(qa.getId())
                         .setQuestionType(qa.getQuestionType())

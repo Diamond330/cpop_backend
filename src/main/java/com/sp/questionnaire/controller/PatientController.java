@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/admin")
-public class StudentController {
+public class PatientController {
     @Autowired
     private StudentService studentService;
 
@@ -27,6 +27,9 @@ public class StudentController {
     private Map<String, Object> listStudent(HttpServletRequest request) {
         //System.out.println(request.getSession().getId());
         //System.out.println(request.getRemoteAddr());
+        String a="ddd";
+
+
         Map<String, Object> map = new HashMap<>();
         map.put("data", studentService.queryStudent());
         return map;

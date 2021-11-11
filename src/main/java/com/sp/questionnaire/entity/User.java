@@ -10,8 +10,8 @@ import java.util.Date;
 
 /**
  * description:
- * Author:Xiaowanwan
- * Date:2018/9/13-10:29
+ * Author:Shuhao Dong
+ * Date:2021/9/13-10:29
  */
 @Getter
 @Setter
@@ -38,5 +38,15 @@ public class User {
     private Date createTime;//注册时间
     private Date lastLoginTime;//最后登录时间
     private Integer status;//状态值：0：未激活1：已激活
+    private Integer identity;//身份：0：医生 2：病人
     private String randomCode;//随机码，用于激活用户
+    private String parentId;//随机码，用于激活用户
+    private String name;
+    private String age;
+    private String gender;
+    private String education;
+    private String race;
+    private String smokeHis;
+    private String etohHis;
+    private String comorbidity;//并发
 }

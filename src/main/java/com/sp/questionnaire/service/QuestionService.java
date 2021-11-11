@@ -6,8 +6,8 @@ import java.util.List;
 
 /**
  * description:
- * Author:Xiaowanwan
- * Date:2018/9/13-16:18
+ * Author:Shuhao Dong
+ * Date:2021/9/13-16:18
  */
 public interface QuestionService {
     /**

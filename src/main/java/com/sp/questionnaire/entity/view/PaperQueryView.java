@@ -7,8 +7,8 @@ import java.util.Date;
 
 /**
  * description:返回所有Paper类的中间类，返回的是这个类的对象
- * Author:Xiaowanwan
- * Date:2018/9/16-15:17
+ * Author:Shuhao Dong
+ * Date:2021/11/8-15:17
  */
 @Setter
 @Getter

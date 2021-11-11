@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * description:
- * Author:Xiaowanwan
- * Date:2018/9/13-10:59
+ * Author:Shuhao Dong
+ * Date:2021/9/13-10:59
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
     public boolean insertUser(User user) {
         if (user != null && !"".equals(user.getId())) {
             try {
+
                 int i = userDao.insertUser(user);
                 if (i == 1) {
                     return true;
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
     public boolean updateUser(User user) {
         if (user != null && !"".equals(user.getId())) {
             try {
+                System.out.println(user.getAge());
                 int i = userDao.updateUser(user);
                 if (i == 1) {
                     return true;

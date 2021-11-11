@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
  * description:添加Paper所定义的中间Question类
- * Author:Xiaowanwan
- * Date:2018/9/16-17:55
+ * Author:Shuhao Dong
+ * Date:2021/11/8-17:55
  */
 @Getter
 @Setter

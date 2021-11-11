@@ -57,13 +57,14 @@
     <insert id="insertAnswer" keyProperty="id" keyColumn="id"
             parameterType="com.sp.questionnaire.entity.Answer">
         INSERT INTO answer(id,
+        user_id,
         paper_id,
         question_id,
         question_type,
         create_time,
         answer_content)
         VALUES
-        (#{id}, #{paperId},#{questionId}, #{questionType}, #{createTime},#{answerContent})
+        (#{id},#{userId}, #{paperId},#{questionId}, #{questionType}, #{createTime},#{answerContent})
     </insert>
 
     <update id="updateAnswer" parameterType="com.sp.questionnaire.entity.Answer">
