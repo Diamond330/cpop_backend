@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
                 if (i == 1) {
                     return true;
                 } else {
+
                     throw new RuntimeException("a:插入用户失败！" + user);
                 }
             } catch (Exception e) {
