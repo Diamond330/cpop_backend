@@ -45,7 +45,7 @@ public class Patient {
     private String gender;
     private String education;
     private String race;
-    private String smokeHis;
-    private String etohHis;
+    private String smokeHistory;
+    private String etohHistory;
     private String comorbidity;//并发
 }

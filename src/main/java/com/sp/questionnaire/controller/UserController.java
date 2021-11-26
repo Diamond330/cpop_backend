@@ -5,9 +5,7 @@ import com.sp.questionnaire.entity.Answer;
 import com.sp.questionnaire.entity.Paper;
 import com.sp.questionnaire.entity.Question;
 import com.sp.questionnaire.entity.User;
-import com.sp.questionnaire.entity.view.PaperAnswer;
-import com.sp.questionnaire.entity.view.QuestionAnswer;
-import com.sp.questionnaire.entity.view.ViewPaperQuestion;
+import com.sp.questionnaire.entity.view.*;
 import com.sp.questionnaire.service.AnswerService;
 import com.sp.questionnaire.service.PaperService;
 import com.sp.questionnaire.service.QuestionService;
@@ -59,8 +57,8 @@ public class UserController {
     /**
      * <P>注册接口 </p>
      *
-     * @param： 映射的实体对象，result：参数校验的结果对象
      * @return JSON字符串
+     * @param： 映射的实体对象，result：参数校验的结果对象
      */
     @RequestMapping(value = "/world", method = RequestMethod.GET)
     @ResponseBody
@@ -68,11 +66,12 @@ public class UserController {
         System.out.println("name : " + name);
         return "hello";
     }
+
     @ResponseBody//加这个表示返回的是纯文本数据
     @RequestMapping(value = "/api/v1/register", method = RequestMethod.POST)
     public Map<String, Object> register(HttpServletRequest request, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException, MessagingException {
         //System.out.println("register: " + request.getSession().getId());
-        System.out.println(user);
+
         Map<String, Object> map = new HashMap<>();
         if (result.hasErrors()) {
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
@@ -81,18 +80,25 @@ public class UserController {
             return map;
         }
         //user校验合法
+        System.out.println(user.getParentId());
+        int parentIdentity = userService.queryUserByID(user.getParentId()).getIdentity();
         User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
-        System.out.println(user0.getEmail());
+        String password = commonUtils.generatePassword();
+        System.out.println(password);
+        System.out.println(user.getParentId());
         if (user0 == null) {  //new user
             user.setId(commonUtils.getUUID())
-                    .setPassword(commonUtils.encodeByMd5(user.getPassword()))
+                    .setPassword(commonUtils.encodeByMd5(password))
                     .setCreateTime(new Date())
+                    .setParentId(user.getParentId())
                     .setLastLoginTime(null)
+                    .setIdentity(parentIdentity + 1)
                     .setStatus(0)
                     .setRandomCode(commonUtils.getUUID());
+
             if (userService.insertUser(user)) {   //insert user success
                 //发送激活邮件
-                //mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
+                mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), password);
                 map.put("code", 0);
                 map.put("msg", "ok");
                 map.put("data", 0);
@@ -102,39 +108,42 @@ public class UserController {
             }
         } else {    // user exists
 
-            if (user0.getStatus() == 0) {//user not activate
-                user.setId(user0.getId())
-                        .setPassword(commonUtils.encodeByMd5(user.getPassword()))
-                        .setCreateTime(user0.getCreateTime())
-                        .setLastLoginTime(null)
-                        .setStatus(0)
-                        .setRandomCode(commonUtils.getUUID())
-                        .setName(user.getName())
-                        .setAge(user.getAge())
-                        .setSmokeHis(user.getSmokeHis())
-                        .setEtohHis(user.getEtohHis())
-                        .setComorbidity(user.getComorbidity())
-                        .setEducation(user.getEducation())
-                        .setRace(user.getRace())
-                        .setGender(user.getGender())
-                        .setIdentity(user.getIdentity());
-                if (userService.updateUser(user)) {
-                    //mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
-                    map.put("code", 0);
-                    map.put("msg", "ok");
-                    map.put("data", 2);
-                } else {
-                    map.put("code", 1);
-                    map.put("msg", "update database fail");
-                }
-            } else if (user0.getStatus() == 1) {    //user is active
-                map.put("code", 0);
-                map.put("msg", "ok");
-                map.put("data", 1);
-            } else {
-                map.put("code", 1);
-                map.put("msg", "error data");
-            }
+//            if (user0.getStatus() == 0) {//user not activate
+//                user.setId(user0.getId())
+//                        .setPassword(commonUtils.encodeByMd5(user.getPassword()))
+//                        .setCreateTime(user0.getCreateTime())
+//                        .setLastLoginTime(null)
+//                        .setStatus(0)
+//                        .setRandomCode(commonUtils.getUUID())
+//                        .setRealName(user.getRealName())
+//                        .setAge(user.getAge())
+//                        .setSmokeHistory(user.getSmokeHistory())
+//                        .setEtohHistory(user.getEtohHistory())
+//                        .setComorbidity(user.getComorbidity())
+//                        .setEducation(user.getEducation())
+//                        .setRace(user.getRace())
+//                        .setGender(user.getGender())
+//                        .setIdentity(user.getIdentity());
+//                if (userService.updateUser(user)) {
+//                    //mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
+//                    map.put("code", 0);
+//                    map.put("msg", "ok");
+//                    map.put("data", 2);
+//                } else {
+//                    map.put("code", 1);
+//                    map.put("msg", "update database fail");
+//                }
+//            } else if (user0.getStatus() == 1) {    //user is active
+//                map.put("code", 0);
+//                map.put("msg", "ok");
+//                map.put("data", 1);
+//            } else {F
+//                map.put("code", 1);
+//                map.put("msg", "error data");
+//            }
+            map.put("code", 0);
+            map.put("msg", "user exist");
+            map.put("data", 1);
         }
         return map;
     }
@@ -144,7 +153,9 @@ public class UserController {
     public Map<String, Object> userupdate(HttpServletRequest request, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException, MessagingException {
         //System.out.println("register: " + request.getSession().getId());
         System.out.println(user);
+        //DDD
         Map<String, Object> map = new HashMap<>();
+
         if (result.hasErrors()) {
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
             map.put("msg", error.getDefaultMessage());//将错误信息放入msg
@@ -173,17 +184,17 @@ public class UserController {
             }
         } else {    // user exists
             System.out.println(user0.getAge());
-            if (user0.getStatus() == 0||user0.getStatus() == 1) {//user not activate
+            if (user0.getStatus() == 0 || user0.getStatus() == 1) {//user not activate
                 user.setId(user0.getId())
                         .setPassword(commonUtils.encodeByMd5(user.getPassword()))
                         .setCreateTime(user0.getCreateTime())
                         .setLastLoginTime(null)
                         .setStatus(0)
                         .setRandomCode(commonUtils.getUUID())
-                        .setName(user.getName())
+                        .setRealName(user.getRealName())
                         .setAge(user.getAge())
-                        .setSmokeHis(user.getSmokeHis())
-                        .setEtohHis(user.getEtohHis())
+                        .setSmokeHistory(user.getSmokeHistory())
+                        .setEtohHistory(user.getEtohHistory())
                         .setComorbidity(user.getComorbidity())
                         .setEducation(user.getEducation())
                         .setRace(user.getRace())
@@ -191,7 +202,7 @@ public class UserController {
                         .setIdentity(user.getIdentity());
 
                 if (userService.updateUser(user)) {
-                   // mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
+                    // mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
                     map.put("code", 0);
                     map.put("msg", "ok");
                     map.put("data", 2);
@@ -213,7 +224,7 @@ public class UserController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/api/v1/login")
+    @RequestMapping(value = "/api/v1/login", method = RequestMethod.POST)
     public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException {
         //System.out.println("login: " + request.getSession().getId());
         Map<String, Object> map = new HashMap<>();
@@ -245,20 +256,22 @@ public class UserController {
             if (user0.getPassword().equals(commonUtils.encodeByMd5(user.getPassword()))) {//password is right
                 map.put("code", 0);
                 JSONObject json = new JSONObject();
-                if (user0.getStatus() == 1) {   //is activate
+                if (user0.getStatus() == 1 || user0.getStatus() == 0) {   //is activate
                     //Cookie cookie = new Cookie("USERID", request.getSession().getId());
                     //response.addCookie(cookie);
                     response.setHeader("token", request.getSession().getId());
                     map.put("msg", "ok");
                     json.put("result", 0);
                     json.put("token", request.getSession().getId());
+                    json.put("userid", user0.getId());
+                    json.put("identity", user0.getIdentity());
                     json.put("username", user0.getUsername());
                     json.put("email", user0.getEmail());
                     //登录成功，将user存入session中
                     request.getSession().setAttribute("admin", user0);
                     //update user last login time
-                    user0.setLastLoginTime(new Date());
-                    userService.updateUser(user0);
+//                    user0.setLastLoginTime(new Date());
+//                    userService.updateUser(user0);
                 } else {
                     json.put("result", 3);
                     map.put("msg", "email is not activate");
@@ -323,6 +336,120 @@ public class UserController {
             return "invalid";
         }
     }
+
+
+    @RequestMapping(value = "/api/v1/querypatient/{code}", method = RequestMethod.GET)
+    public Map<String, Object> queryPatientByParentId(@PathVariable("code") String code) {
+        //System.out.println(code);
+        Map<String, Object> map = new HashMap<>();
+        if (code == null || code.length() < 10) {
+            map.put("code", 2);
+            map.put("msg", "doctor id不能为空");
+            return map;
+        }
+        List<User> users = userService.queryUserByParent(code);
+        //System.out.println(user0);
+        JSONArray jsonArray = new JSONArray();
+        if (!users.isEmpty()) {
+            for (User user : users) {//遍历list，把Paper转换成PaperQueryView类型
+                System.out.println(user.getEducation());
+                UserQueryView userQueryView = new UserQueryView();
+                userQueryView.setId(user.getId())
+                        .setAge(user.getAge())
+                        .setComorbidity(user.getComorbidity())
+                        .setEducation(user.getEducation())
+                        .setGender(user.getGender())
+                        .setEtohHistory(user.getEtohHistory())
+                        .setRace(user.getRace())
+                        .setName(user.getRealName())
+                        .setSmokeHistory(user.getSmokeHistory());
+                System.out.println("===");
+                System.out.println(userQueryView.getName());
+                System.out.println("===");
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", userQueryView.getId());
+                jsonObject.put("name", userQueryView.getName());
+
+                jsonObject.put("age", userQueryView.getAge());
+                jsonObject.put("gender", userQueryView.getGender());
+                jsonObject.put("race", userQueryView.getRace());
+                jsonObject.put("education", userQueryView.getEducation());
+                jsonObject.put("etoh_history", userQueryView.getEtohHistory());
+                jsonObject.put("smoke_history", userQueryView.getSmokeHistory());
+                jsonObject.put("comorbidity", userQueryView.getComorbidity());
+                jsonArray.add(jsonObject);
+
+            }
+            map.put("code", 0);
+            map.put("msg", "ok");
+            map.put("data", jsonArray);
+            return map;
+
+
+        } else {  //invalid
+            map.put("code", 2);
+            map.put("msg", "invalid");
+            return map;
+        }
+    }
+
+    @RequestMapping(value = "/api/v1/querydoctor/{code}", method = RequestMethod.GET)
+    public Map<String, Object> queryDoctorList(@PathVariable("code") String userId) {
+        //System.out.println(code);
+        Map<String, Object> map = new HashMap<>();
+        if (userId == null) {
+            map.put("code", 2);
+            map.put("msg", "admin id不能为空");
+            return map;
+        }
+        List<User> users = userService.queryUserByParent(userId);
+        //System.out.println(user0);
+        JSONArray jsonArray = new JSONArray();
+        if (!users.isEmpty()) {
+            for (User user : users) {//遍历list，把Paper转换成PaperQueryView类型
+
+                UserQueryView userQueryView = new UserQueryView();
+                userQueryView.setId(user.getId())
+                        .setUsername(user.getUsername())
+//                        .setAge(user.getAge())
+                        .setEmail(user.getEmail())
+//                        .setComorbidity(user.getComorbidity())
+//                        .setEducation(user.getEducation())
+//                        .setGender(user.getGender())
+//                        .setEtohHistory(user.getEtohHistory())
+//                        .setRace(user.getRace())
+                        .setName(user.getRealName())
+//                        .setSmokeHistory(user.getSmokeHistory())
+                ;
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", userQueryView.getId());
+                jsonObject.put("name", userQueryView.getUsername());
+                jsonObject.put("real_name", userQueryView.getName());
+
+//                jsonObject.put("age", userQueryView.getAge());
+//                jsonObject.put("gender", userQueryView.getGender());
+//                jsonObject.put("race", userQueryView.getRace());
+//                jsonObject.put("education", userQueryView.getEducation());
+//                jsonObject.put("etoh_history", userQueryView.getEtohHistory());
+//                jsonObject.put("smoke_history", userQueryView.getSmokeHistory());
+//                jsonObject.put("comorbidity", userQueryView.getComorbidity());
+                jsonArray.add(jsonObject);
+
+            }
+            map.put("code", 0);
+            map.put("msg", "ok");
+            map.put("data", jsonArray);
+            return map;
+
+
+        } else {  //invalid
+            map.put("code", 2);
+            map.put("msg", "invalid");
+            return map;
+        }
+    }
+
 
     /**
      * 用户答卷
@@ -429,7 +556,7 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/commit-paper", method = RequestMethod.POST)
-    public Map<String, Object> userViewPaper(@Valid @RequestBody PaperAnswer answer, BindingResult result,HttpServletRequest request) {
+    public Map<String, Object> userViewPaper(@Valid @RequestBody PaperAnswer answer, BindingResult result, HttpServletRequest request) {
         User user = (User) request.getAttribute("admin");
         //String userId=user.getId();;
         String userId = "7663a6072dca49afabe12bb4797b7623";

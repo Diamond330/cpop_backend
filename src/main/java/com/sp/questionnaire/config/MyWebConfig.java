@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /*
@@ -16,13 +17,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 
 @Configuration
-public class MyWebConfig extends WebMvcConfigurerAdapter {
+public class MyWebConfig extends WebMvcConfigurationSupport {
     /**
      * 添加拦截器
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AdminInterceptor()).addPathPatterns("/*");
+        registry.addInterceptor(new AdminInterceptor()).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
     /**
@@ -34,7 +35,7 @@ public class MyWebConfig extends WebMvcConfigurerAdapter {
         registry.addMapping("/**")
                 .allowCredentials(true)
                 .allowedHeaders("*")
-                .allowedOrigins("http://127.0.0.1:8080")
+                //.allowedOrigins("http://192.168.1.100:8080")
                 .allowedMethods("*")
                 .maxAge(36000);
     }
@@ -47,6 +48,5 @@ public class MyWebConfig extends WebMvcConfigurerAdapter {
         slrBean.setListener(new MySessionListener());
         return slrBean;
     }
-
 
 }

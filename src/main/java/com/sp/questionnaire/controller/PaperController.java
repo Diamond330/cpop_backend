@@ -41,17 +41,7 @@ public class PaperController {
     public Map<String, Object> paperLists(HttpServletRequest request) throws ParseException {
         Map<String, Object> map = new HashMap<>();
 
-//        User u = new User();
-//        u.setId("1");
-//        request.getSession().setAttribute("admin", u);
-//        request.setAttribute("session", request.getSession());
-
-        User user = (User) request.getAttribute("admin");
-        String userId = "7663a6072dca49afabe12bb4797b7623";
-
-        //Cookie[] tokens = request.getCookies();
-
-        List<Paper> list = paperService.queryPaperByUserID(userId);
+        List<Paper> list = paperService.queryPaper();
         ArrayList<PaperQueryView> queryViewlist = new ArrayList<PaperQueryView>();
 
         JSONArray jsonArray = new JSONArray();

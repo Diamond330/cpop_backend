@@ -29,7 +29,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             throws Exception {
         // TODO Auto-generated method stub
         //在整个请求结束之后被调用，也就是在DispatcherServlet 渲染了对应的视图之后执行，主要是用于进行资源清理工作
-        //System.out.println("admin afterCompletion");
+        System.out.println("admin afterCompletion");
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             throws Exception {
         // TODO Auto-generated method stub
         //请求处理之后进行调用，但是在视图被渲染之前，即Controller方法调用之后
-        //System.out.println("admin postHandler");
+        System.out.println("admin postHandler");
     }
 
     @Override
@@ -68,7 +68,8 @@ public class AdminInterceptor implements HandlerInterceptor {
 
         String tokenHeader = request.getHeader("token");
 
-        if (url.indexOf("admin") >= 0) {
+        if (url.indexOf("admin1") >= 0) {
+
             //登录成功后将uesr信息存入session，以验证是否登录
             if (tokenHeader != null) {
                 HttpSession session = MySessionContext.getSession(tokenHeader);
@@ -78,10 +79,10 @@ public class AdminInterceptor implements HandlerInterceptor {
                 }
             } else {
                 //TODO
-                //System.out.println(request.getServletPath());
-                //System.out.println(request.getLocalAddr() + request.getContextPath() + "/test");
+                System.out.println(request.getServletPath());
+                System.out.println(request.getLocalAddr() + request.getContextPath() + "/test");
                 //request.getRequestDispatcher("/test").forward(request,response);
-                //throw new IllegalAccessException("token is expired or not login");
+                throw new IllegalAccessException("token is expired or not login");
             }
             JSONObject json = new JSONObject();
             json.put("code", -1);
@@ -90,6 +91,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             response.getWriter().write(json.toString());
             return false;
         } else {
+            //System.out.println("dddddddddddd");
             return true;
         }
     }

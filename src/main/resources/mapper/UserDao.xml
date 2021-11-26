@@ -8,18 +8,23 @@
         SELECT id, username,password, email, create_time,last_login_time,status,random_code,real_name, age, gender, education, race, smoke_history, etoh_history, comorbidity FROM user
         ORDER BY id DESC
     </select>
+    <select id="queryUserByParent" resultType="com.sp.questionnaire.entity.User">
+        SELECT id,parent_id,username,email, real_name,education, age, gender, education,race,smoke_history,comorbidity,etoh_history FROM user
+        WHERE
+            parent_id=#{code}
+    </select>
 
     <select id="queryUserByID" resultType="com.sp.questionnaire.entity.User">
-        SELECT id, username,password, email, create_time,last_login_time,status,random_code FROM user
+        SELECT id, username,password, identity,email, create_time,last_login_time,status,random_code FROM user
         WHERE
         id=#{id}
     </select>
 
     <insert id="insertUser" keyProperty="id" keyColumn="id"
             parameterType="com.sp.questionnaire.entity.User">
-        INSERT INTO user(id, username,password, email, create_time,last_login_time,status,random_code)
+        INSERT INTO user(id, username,password, parent_id, email, identity, create_time,last_login_time,status,random_code)
         VALUES
-        (#{id}, #{username},#{password}, #{email}, #{createTime},#{lastLoginTime},#{status},#{randomCode})
+        (#{id}, #{username},#{password}, #{parentId}, #{email}, #{identity}, #{createTime},#{lastLoginTime},#{status},#{randomCode})
     </insert>
 
     <update id="updateUser" parameterType="com.sp.questionnaire.entity.User">
@@ -40,8 +45,8 @@
             <if test="gender != null">gender = #{gender},</if>
             <if test="education != null">education = #{education},</if>
             <if test="race != null">race = #{race},</if>
-            <if test="smokeHis != null">smoke_history = #{smokeHis},</if>
-            <if test="etohHis != null">etoh_history = #{etohHis},</if>
+            <if test="smokeHistory != null">smoke_history = #{smokeHistory},</if>
+            <if test="etohHistory != null">etoh_history = #{etohHistory},</if>
             <if test="comorbidity != null">comorbidity = #{comorbidity},</if>
         </set>
         WHERE id = #{id}
@@ -55,7 +60,7 @@
 
 
     <select id="queryUserByEmail" resultType="com.sp.questionnaire.entity.User">
-        SELECT id, username,password, email, create_time,last_login_time,status,random_code FROM user
+        SELECT id, username,password, identity,email, create_time,last_login_time,status,random_code FROM user
         WHERE
         email=#{email}
     </select>

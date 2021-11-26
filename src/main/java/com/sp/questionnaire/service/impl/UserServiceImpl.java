@@ -23,10 +23,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> queryUser() {
+
         //System.out.println("userDao:"+userDao.toString());
         return userDao.queryUser();
     }
-
+//data ？ User
     @Override
     public User queryUserByID(String id) {
         return userDao.queryUserByID(id);
@@ -44,6 +45,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User queryUserByRandomCode(String code) {
         return userDao.queryUserByRandomCode(code);
+    }
+
+    @Override
+    public List<User> queryUserByParent(String code) {
+        return userDao.queryUserByParent(code);
     }
 
 

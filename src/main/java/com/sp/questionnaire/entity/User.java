@@ -19,7 +19,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User<create_time> {
 
     private String id;//用户ID
 
@@ -27,7 +27,7 @@ public class User {
     @Size(min = 2, max = 64, message = "昵称长度必须在2-64个字符")
     private String username;//用户名（昵称）
 
-    @NotNull(message = "密码不能为空")
+    //@NotNull(message = "密码不能为空")
     @Size(min = 6, max = 64, message = "密码合理长度为必须6-64个字符")
     private String password;//MD5加密后的密码
 
@@ -41,12 +41,13 @@ public class User {
     private Integer identity;//身份：0：医生 2：病人
     private String randomCode;//随机码，用于激活用户
     private String parentId;//随机码，用于激活用户
-    private String name;
+    private String realName;
     private String age;
     private String gender;
     private String education;
     private String race;
-    private String smokeHis;
-    private String etohHis;
+    private String smokeHistory;
+    private String etohHistory;
     private String comorbidity;//并发
+
 }
