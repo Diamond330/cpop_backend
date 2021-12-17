@@ -19,6 +19,10 @@ import java.util.List;
 public class PaperAnswer {
     @NotNull(message = "问卷id不能为空")
     private String id;
+    @NotNull(message = "病人id不能为空")
+    private String patientId;
+    @NotNull(message = "病人分数不能为空")
+    private int score;
     @NotNull(message = "答案列表不能为空")
     private List<QuestionAnswer> answers;
 }

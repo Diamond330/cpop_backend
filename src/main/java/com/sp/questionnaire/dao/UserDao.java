@@ -60,4 +60,6 @@ public interface UserDao {
     User queryUserByRandomCode(String code);
 
     List<User> queryUserByParent(String code);
+
+    List<User> queryUserByDate();
 }

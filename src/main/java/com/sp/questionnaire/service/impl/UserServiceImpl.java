@@ -52,6 +52,11 @@ public class UserServiceImpl implements UserService {
         return userDao.queryUserByParent(code);
     }
 
+    @Override
+    public List<User> queryUserByDate() {
+        return userDao.queryUserByDate();
+    }
+
 
     @Transactional
     @Override

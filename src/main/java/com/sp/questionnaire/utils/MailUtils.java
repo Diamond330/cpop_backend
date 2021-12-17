@@ -23,8 +23,10 @@ public class MailUtils {
     // 发件人的 邮箱 和 密码（替换为自己的邮箱和密码）
     // PS: 某些邮箱服务器为了增加邮箱本身密码的安全性，给 SMTP 客户端设置了独立密码（有的邮箱称为“授权码”）,
     //     对于开启了独立密码的邮箱, 这里的邮箱密码必需使用这个独立密码（授权码）。
-    public static String myEmailAccount = "cpwu@foxmail.com";
-    public static String myEmailPassword = "pkqifoxowfikdcfg";
+    public static String myEmailAccount = "295656417@qq.com";
+    public static String myEmailPassword = "ymfbivylurptbiba";
+    //public static String myEmailPassword = "arneegrprqwobibb";
+    //arneegrprqwobibb
 
     // 发件人邮箱的 SMTP 服务器地址, 必须准确, 不同邮件服务器地址不同, 一般(只是一般, 绝非绝对)格式为: smtp.xxx.com
     // 网易163邮箱的 SMTP 服务器地址为: smtp.163.com
@@ -32,10 +34,10 @@ public class MailUtils {
     public static String myEmailSMTPHost = "smtp.qq.com";
 
 
-    private String senderName = "在线问卷系统";
-    private String themeActivate = "在线问卷系统账号激活通知";
-    private String themePaperStart = "问卷生效通知";
-    private String themePaperEnd = "问卷结束通知";
+    private String senderName = "CPOP";
+    private String themeActivate = "CPOP account activation";
+    private String themePaperStart = "CPOP surgery notification";
+    private String themePaperEnd = "invalid info";
 
     @Value("${mail.ActivatePrefix}")
     private String url;
@@ -51,15 +53,19 @@ public class MailUtils {
 
     public void sendActivateMail(String receiveMailAccount, String nickName, String randomCode) throws MessagingException {
         StringBuffer content = new StringBuffer();
-        content.append("<b>您已在本系统成功注册账号<br>昵称为：").append(nickName).append("<br><br>")
-                .append("现在<a href='").append(url).append(randomCode).append("'>点击这里激活账号</a>即可开始使用！")
-                .append("</b><br>如非本人操作，请忽略本邮件。");
+        content.append("<b>You have successfully registered an account<br>Your username is：").append(nickName).append("<br>")
+                .append("<b>Your password is: ").append(randomCode).append("</b><br><br>");
         mailSettings(senderName, themeActivate, receiveMailAccount, nickName, content.toString());
+    }
+    public void sendSurgeryDateMail(String receiveMailAccount, String date) throws MessagingException {
+        StringBuffer content = new StringBuffer();
+        content.append("<b>You surgery date is：").append(date).append("<br>");
+        mailSettings(senderName, themePaperStart, receiveMailAccount, date, content.toString());
     }
 
     public void sendPaperStartMail(String receiveMailAccount, String nickName, Paper paper) throws MessagingException {
         StringBuffer content = new StringBuffer();
-        content.append("<b>尊敬的").append(nickName).append("<br><br>")
+        content.append("<b>Dear").append(nickName).append("<br><br>")
                 .append("您于").append(commonUtils.getFormatDateTime(paper.getCreateTime()))
                 .append("创建的标题为“").append(paper.getTitle()).append("”的问卷，已经可以正式答卷了，快点分享出去吧！<br><br>")
                 .append("现在<a href='").append(paperUrl).append(paper.getId()).append("'>点击这里</a>即可查看问卷详情！</b>")
@@ -101,6 +107,11 @@ public class MailUtils {
         props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.setProperty("mail.smtp.socketFactory.fallback", "false");
         props.setProperty("mail.smtp.socketFactory.port", smtpPort);
+        props.setProperty("mail.smtp.host", myEmailSMTPHost);
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.starttls.enable", "true");
+        props.setProperty("mail.smtp.starttls.required", "true");
+        props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 
 
         // 2. 根据配置创建会话对象, 用于和邮件服务器交互

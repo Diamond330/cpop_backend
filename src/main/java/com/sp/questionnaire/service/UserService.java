@@ -61,4 +61,5 @@ public interface UserService {
 
     User queryUserByRandomCode(String code);
     List<User> queryUserByParent(String code);
+    List<User> queryUserByDate();
 }

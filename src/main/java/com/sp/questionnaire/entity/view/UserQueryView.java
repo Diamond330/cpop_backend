@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * description:返回所有Paper类的中间类，返回的是这个类的对象
@@ -28,4 +29,6 @@ public class UserQueryView {
     private String smokeHistory;
     private String etohHistory;
     private String comorbidity;//并发
+    private List<Integer> scores;
+    private List<String> time;
 }

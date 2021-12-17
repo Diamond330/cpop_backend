@@ -41,7 +41,7 @@ public class UserServiceTest {
                 .setPassword(commonUtils.encodeByMd5("123"))
                 .setEmail("456@qq.com")
                 .setCreateTime(new Date())
-                .setLastLoginTime(null)
+                .setSurgeryDate(null)
                 .setStatus(0)
                 .setRandomCode(commonUtils.getUUID());
         System.out.println(userService.insertUser(user));

@@ -29,7 +29,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             throws Exception {
         // TODO Auto-generated method stub
         //在整个请求结束之后被调用，也就是在DispatcherServlet 渲染了对应的视图之后执行，主要是用于进行资源清理工作
-        System.out.println("admin afterCompletion");
+        //System.out.println("admin afterCompletion");
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             throws Exception {
         // TODO Auto-generated method stub
         //请求处理之后进行调用，但是在视图被渲染之前，即Controller方法调用之后
-        System.out.println("admin postHandler");
+        //System.out.println("admin postHandler");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
 
 */
-        System.out.println("pre: " + request.getSession().getId());
+        //System.out.println("pre: " + request.getSession().getId());
 
         //System.out.println("hd origin: " + request.getHeader("Origin"));
 

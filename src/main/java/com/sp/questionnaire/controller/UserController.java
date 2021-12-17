@@ -1,15 +1,9 @@
 package com.sp.questionnaire.controller;
 
 
-import com.sp.questionnaire.entity.Answer;
-import com.sp.questionnaire.entity.Paper;
-import com.sp.questionnaire.entity.Question;
-import com.sp.questionnaire.entity.User;
+import com.sp.questionnaire.entity.*;
 import com.sp.questionnaire.entity.view.*;
-import com.sp.questionnaire.service.AnswerService;
-import com.sp.questionnaire.service.PaperService;
-import com.sp.questionnaire.service.QuestionService;
-import com.sp.questionnaire.service.UserService;
+import com.sp.questionnaire.service.*;
 import com.sp.questionnaire.utils.CommonUtils;
 import com.sp.questionnaire.utils.MailUtils;
 import net.sf.json.JSONArray;
@@ -40,6 +34,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private CommonUtils commonUtils;
+    @Autowired
+    private ScoreService scoreService;
 
     @Autowired
     private MailUtils mailUtils;
@@ -73,7 +69,7 @@ public class UserController {
         //System.out.println("register: " + request.getSession().getId());
 
         Map<String, Object> map = new HashMap<>();
-        if (result.hasErrors()) {
+        if (result.hasErrors()||user.getParentId()==null) {
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
             map.put("msg", error.getDefaultMessage());//将错误信息放入msg
             map.put("code", 2);
@@ -81,6 +77,7 @@ public class UserController {
         }
         //user校验合法
         System.out.println(user.getParentId());
+        System.out.println("==");
         int parentIdentity = userService.queryUserByID(user.getParentId()).getIdentity();
         User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
         String password = commonUtils.generatePassword();
@@ -91,14 +88,14 @@ public class UserController {
                     .setPassword(commonUtils.encodeByMd5(password))
                     .setCreateTime(new Date())
                     .setParentId(user.getParentId())
-                    .setLastLoginTime(null)
+                    .setSurgeryDate(null)
                     .setIdentity(parentIdentity + 1)
                     .setStatus(0)
                     .setRandomCode(commonUtils.getUUID());
 
             if (userService.insertUser(user)) {   //insert user success
                 //发送激活邮件
-                mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), password);
+                mailUtils.sendActivateMail(user.getEmail(), user.getEmail(), password);
                 map.put("code", 0);
                 map.put("msg", "ok");
                 map.put("data", 0);
@@ -157,19 +154,26 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
 
         if (result.hasErrors()) {
+
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
+            System.out.println(error.getDefaultMessage());
             map.put("msg", error.getDefaultMessage());//将错误信息放入msg
             map.put("code", 2);
             return map;
         }
         //user校验合法
-        System.out.println(user.getEmail());
-        User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
+
+//        User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
+        System.out.println(user.getId());
+        User user0 = userService.queryUserByID(user.getId());//看看邮箱有没有被用过
+        System.out.println(user0.getId());
+        System.out.println(user0.getId());
+        System.out.println("======");
         if (user0 == null) {  //new user
             user.setId(commonUtils.getUUID())
                     .setPassword(commonUtils.encodeByMd5(user.getPassword()))
                     .setCreateTime(new Date())
-                    .setLastLoginTime(null)
+                    .setSurgeryDate(null)
                     .setStatus(0)
                     .setRandomCode(commonUtils.getUUID());
             if (userService.insertUser(user)) {   //insert user success
@@ -185,10 +189,8 @@ public class UserController {
         } else {    // user exists
             System.out.println(user0.getAge());
             if (user0.getStatus() == 0 || user0.getStatus() == 1) {//user not activate
-                user.setId(user0.getId())
-                        .setPassword(commonUtils.encodeByMd5(user.getPassword()))
-                        .setCreateTime(user0.getCreateTime())
-                        .setLastLoginTime(null)
+                user
+                        .setSurgeryDate(user.getSurgeryDate())
                         .setStatus(0)
                         .setRandomCode(commonUtils.getUUID())
                         .setRealName(user.getRealName())
@@ -267,6 +269,7 @@ public class UserController {
                     json.put("identity", user0.getIdentity());
                     json.put("username", user0.getUsername());
                     json.put("email", user0.getEmail());
+                    json.put("date",user0.getSurgeryDate());
                     //登录成功，将user存入session中
                     request.getSession().setAttribute("admin", user0);
                     //update user last login time
@@ -339,7 +342,7 @@ public class UserController {
 
 
     @RequestMapping(value = "/api/v1/querypatient/{code}", method = RequestMethod.GET)
-    public Map<String, Object> queryPatientByParentId(@PathVariable("code") String code) {
+    public Map<String, Object> queryPatientByParentId(@PathVariable("code") String code) throws ParseException {
         //System.out.println(code);
         Map<String, Object> map = new HashMap<>();
         if (code == null || code.length() < 10) {
@@ -348,12 +351,23 @@ public class UserController {
             return map;
         }
         List<User> users = userService.queryUserByParent(code);
+
         //System.out.println(user0);
         JSONArray jsonArray = new JSONArray();
         if (!users.isEmpty()) {
             for (User user : users) {//遍历list，把Paper转换成PaperQueryView类型
-                System.out.println(user.getEducation());
                 UserQueryView userQueryView = new UserQueryView();
+                List<Score> scores =scoreService.queryScore(user.getId());
+
+                List<Integer> s=new ArrayList<>();
+                List<String> t=new ArrayList<>();
+                for(Score score:scores){
+                    //System.out.println(score.getScore());
+                    s.add(score.getScore());
+                    t.add(commonUtils.getDateStringByDate(score.getTime()));
+                    //System.out.println("===");
+
+                }
                 userQueryView.setId(user.getId())
                         .setAge(user.getAge())
                         .setComorbidity(user.getComorbidity())
@@ -361,15 +375,15 @@ public class UserController {
                         .setGender(user.getGender())
                         .setEtohHistory(user.getEtohHistory())
                         .setRace(user.getRace())
-                        .setName(user.getRealName())
+                        .setName(user.getUsername())
+                        .setTime(t)
+                        .setScores(s)
                         .setSmokeHistory(user.getSmokeHistory());
-                System.out.println("===");
-                System.out.println(userQueryView.getName());
-                System.out.println("===");
+
+
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", userQueryView.getId());
                 jsonObject.put("name", userQueryView.getName());
-
                 jsonObject.put("age", userQueryView.getAge());
                 jsonObject.put("gender", userQueryView.getGender());
                 jsonObject.put("race", userQueryView.getRace());
@@ -377,7 +391,12 @@ public class UserController {
                 jsonObject.put("etoh_history", userQueryView.getEtohHistory());
                 jsonObject.put("smoke_history", userQueryView.getSmokeHistory());
                 jsonObject.put("comorbidity", userQueryView.getComorbidity());
+                jsonObject.put("score", s);
+                jsonObject.put("date", t);
+
                 jsonArray.add(jsonObject);
+                System.out.println(jsonArray);
+
 
             }
             map.put("code", 0);
@@ -557,9 +576,9 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/api/v1/user/commit-paper", method = RequestMethod.POST)
     public Map<String, Object> userViewPaper(@Valid @RequestBody PaperAnswer answer, BindingResult result, HttpServletRequest request) {
-        User user = (User) request.getAttribute("admin");
+//        User user = (User) request.getAttribute("admin");
         //String userId=user.getId();;
-        String userId = "7663a6072dca49afabe12bb4797b7623";
+        String userId = answer.getPatientId();
         Map<String, Object> map = new HashMap<>();
         if (result.hasErrors()) {
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
@@ -570,6 +589,10 @@ public class UserController {
         String paperId = answer.getId();
         Paper paper = paperService.queryPaperByID(paperId);
         if (paper != null) {
+            Score score=new Score();
+            score.setId(answer.getPatientId());
+            score.setScore(answer.getScore());
+            scoreService.insertScore(score);
             List<Answer> ansList = new ArrayList<>();
             for (QuestionAnswer qa : answer.getAnswers()) {
                 Answer ans = new Answer();

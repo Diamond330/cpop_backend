@@ -1,0 +1,14 @@
+admin 发给doc
+
+doc 发给patient 0/1
+
+patient 0/1 doc
+
+权限
+
+
+0 1 2
+
+admin - send to doc email已知 0
+
+patient 0/1 doc

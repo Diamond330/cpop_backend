@@ -5,7 +5,7 @@
 <mapper namespace="com.sp.questionnaire.dao.UserDao">
 
     <select id="queryUser" resultType="com.sp.questionnaire.entity.User">
-        SELECT id, username,password, email, create_time,last_login_time,status,random_code,real_name, age, gender, education, race, smoke_history, etoh_history, comorbidity FROM user
+        SELECT id, username,password, email, create_time,surgery_date,status,random_code,real_name, age, gender, education, race, smoke_history, etoh_history, comorbidity FROM user
         ORDER BY id DESC
     </select>
     <select id="queryUserByParent" resultType="com.sp.questionnaire.entity.User">
@@ -15,16 +15,16 @@
     </select>
 
     <select id="queryUserByID" resultType="com.sp.questionnaire.entity.User">
-        SELECT id, username,password, identity,email, create_time,last_login_time,status,random_code FROM user
+        SELECT id, username,password, identity,email, create_time,surgery_date,status,random_code,real_name, age, gender, education, race, smoke_history, etoh_history, comorbidity FROM user
         WHERE
         id=#{id}
     </select>
 
     <insert id="insertUser" keyProperty="id" keyColumn="id"
             parameterType="com.sp.questionnaire.entity.User">
-        INSERT INTO user(id, username,password, parent_id, email, identity, create_time,last_login_time,status,random_code)
+        INSERT INTO user(id, username,password, parent_id, email, identity, create_time,surgery_date,status,random_code)
         VALUES
-        (#{id}, #{username},#{password}, #{parentId}, #{email}, #{identity}, #{createTime},#{lastLoginTime},#{status},#{randomCode})
+        (#{id}, #{username},#{password}, #{parentId}, #{email}, #{identity}, #{createTime},#{surgeryDate},#{status},#{randomCode})
     </insert>
 
     <update id="updateUser" parameterType="com.sp.questionnaire.entity.User">
@@ -35,13 +35,12 @@
             <if test="age != null">age = #{age},</if>
             <if test="email != null">email = #{email},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+            <if test="surgeryDate != null">surgery_date = #{surgeryDate},</if>
             <if test="status != null">status = #{status},</if>
             <if test="randomCode != null">random_code = #{randomCode},</if>
             <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="identity != null">identity = #{identity},</if>
-            <if test="name != null">real_name = #{name},</if>
-
+            <if test="realName != null">real_name = #{realName},</if>
             <if test="gender != null">gender = #{gender},</if>
             <if test="education != null">education = #{education},</if>
             <if test="race != null">race = #{race},</if>
@@ -60,7 +59,7 @@
 
 
     <select id="queryUserByEmail" resultType="com.sp.questionnaire.entity.User">
-        SELECT id, username,password, identity,email, create_time,last_login_time,status,random_code FROM user
+        SELECT id, username,password, identity,email, create_time,surgery_date,status,random_code FROM user
         WHERE
         email=#{email}
     </select>
@@ -70,6 +69,13 @@
         WHERE
         random_code=#{code}
     </select>
+
+    <select id="queryUserByDate" resultType="com.sp.questionnaire.entity.User">
+        SELECT id, username,password, identity, email, create_time,surgery_date,status,random_code,real_name, age, gender, education, race, smoke_history, etoh_history, comorbidity FROM user
+        WHERE
+        to_days(NOW()) - to_days(surgery_date) &lt;= 7
+    </select>
+
 
 
 </mapper>
