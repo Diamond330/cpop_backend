@@ -164,11 +164,8 @@ public class UserController {
         //user校验合法
 
 //        User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
-        System.out.println(user.getId());
+
         User user0 = userService.queryUserByID(user.getId());//看看邮箱有没有被用过
-        System.out.println(user0.getId());
-        System.out.println(user0.getId());
-        System.out.println("======");
         if (user0 == null) {  //new user
             user.setId(commonUtils.getUUID())
                     .setPassword(commonUtils.encodeByMd5(user.getPassword()))
@@ -227,7 +224,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/api/v1/login", method = RequestMethod.POST)
-    public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException {
+    public Map<String, Object> login(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException, ParseException {
         //System.out.println("login: " + request.getSession().getId());
         Map<String, Object> map = new HashMap<>();
         //System.out.println(user.getEmail());
@@ -269,7 +266,7 @@ public class UserController {
                     json.put("identity", user0.getIdentity());
                     json.put("username", user0.getUsername());
                     json.put("email", user0.getEmail());
-                    json.put("date",user0.getSurgeryDate());
+                    json.put("surgeryDate",commonUtils.getDateStringByDate(user0.getSurgeryDate()));
                     //登录成功，将user存入session中
                     request.getSession().setAttribute("admin", user0);
                     //update user last login time
@@ -362,42 +359,25 @@ public class UserController {
                 List<Integer> s=new ArrayList<>();
                 List<String> t=new ArrayList<>();
                 for(Score score:scores){
-                    //System.out.println(score.getScore());
                     s.add(score.getScore());
                     t.add(commonUtils.getDateStringByDate(score.getTime()));
-                    //System.out.println("===");
-
                 }
-                userQueryView.setId(user.getId())
-                        .setAge(user.getAge())
-                        .setComorbidity(user.getComorbidity())
-                        .setEducation(user.getEducation())
-                        .setGender(user.getGender())
-                        .setEtohHistory(user.getEtohHistory())
-                        .setRace(user.getRace())
-                        .setName(user.getUsername())
-                        .setTime(t)
-                        .setScores(s)
-                        .setSmokeHistory(user.getSmokeHistory());
-
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", userQueryView.getId());
-                jsonObject.put("name", userQueryView.getName());
-                jsonObject.put("age", userQueryView.getAge());
-                jsonObject.put("gender", userQueryView.getGender());
-                jsonObject.put("race", userQueryView.getRace());
-                jsonObject.put("education", userQueryView.getEducation());
-                jsonObject.put("etoh_history", userQueryView.getEtohHistory());
-                jsonObject.put("smoke_history", userQueryView.getSmokeHistory());
-                jsonObject.put("comorbidity", userQueryView.getComorbidity());
+                jsonObject.put("id", user.getId());
+                jsonObject.put("name", user.getRealName()==null?"":user.getRealName());
+                jsonObject.put("age", user.getAge()==null?"":user.getAge());
+                jsonObject.put("gender", user.getGender()==null?"":user.getGender());
+                jsonObject.put("race", user.getRace()==null?"":user.getRace());
+                jsonObject.put("education", user.getEducation()==null?"":user.getEducation());
+                jsonObject.put("etoh_history", user.getEtohHistory()==null?"":user.getEtohHistory());
+                jsonObject.put("smoke_history", user.getSmokeHistory()==null?"":user.getSmokeHistory());
+                jsonObject.put("comorbidity", user.getComorbidity()==null?"":user.getComorbidity());
+                jsonObject.put("surgeryDate", user.getSurgeryDate()==null?"":commonUtils.getDateStringByDate(user.getSurgeryDate()) );
                 jsonObject.put("score", s);
                 jsonObject.put("date", t);
-
                 jsonArray.add(jsonObject);
                 System.out.println(jsonArray);
-
-
             }
             map.put("code", 0);
             map.put("msg", "ok");

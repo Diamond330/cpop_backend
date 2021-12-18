@@ -18,14 +18,12 @@ public class ScheduledTask {
     @Autowired
     private MailUtils mailUtils;
 
-    @Scheduled(fixedRate = 30000000)
+    @Scheduled(cron = "0 */2 * * * ?")
     public void scheduledTask() throws MessagingException {
 //        System.out.println("任务执行时间：" + LocalDateTime.now());
         List<User> users = userService.queryUserByDate();
         for(User u:users){
             mailUtils.sendSurgeryDateMail(u.getEmail(), u.getSurgeryDate().toString());
-            System.out.println(u.getUsername());
-
         }
     }
 

@@ -9,7 +9,7 @@
         ORDER BY id DESC
     </select>
     <select id="queryUserByParent" resultType="com.sp.questionnaire.entity.User">
-        SELECT id,parent_id,username,email, real_name,education, age, gender, education,race,smoke_history,comorbidity,etoh_history FROM user
+        SELECT id,parent_id,username,email,surgery_date, real_name,education, age, gender, education,race,smoke_history,comorbidity,etoh_history FROM user
         WHERE
             parent_id=#{code}
     </select>
