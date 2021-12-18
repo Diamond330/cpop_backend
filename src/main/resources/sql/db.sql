@@ -2,54 +2,79 @@
 
 CREATE DATABASE  `questionnaire` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-#用户
-CREATE TABLE  `user` (
- `id` VARCHAR( 64 ) NOT NULL ,
- `username` VARCHAR( 64 ) NOT NULL ,
- `password` VARCHAR( 64 ) NOT NULL ,
- `email` VARCHAR( 64 ) NOT NULL ,
- `create_time` DATETIME NOT NULL ,
- `last_login_time` DATETIME NULL ,
- `status` INT NOT NULL DEFAULT  '0',
- `random_code` VARCHAR( 64 ) NOT NULL ,
-PRIMARY KEY (  `id` ) ,
-UNIQUE (
-`random_code`
-)
-) ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
 #问卷
-CREATE TABLE  `paper` (
- `id` VARCHAR( 64 ) NOT NULL ,
- `user_id` VARCHAR( 64 ) NOT NULL ,
- `title` VARCHAR( 64 ) NOT NULL ,
- `create_time` DATETIME NOT NULL ,
- `status` INT NOT NULL DEFAULT  '0',
- `start_time` DATETIME NULL ,
- `end_time` DATETIME NULL ,
-PRIMARY KEY (  `id` )
-) ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+create table paper
+(
+    id          varchar(64)   not null
+        primary key,
+    user_id     varchar(64)   not null,
+    title       varchar(64)   not null,
+    create_time datetime      not null,
+    status      int default 0 not null,
+    start_time  datetime      null,
+    end_time    datetime      null
+);
+
 
 
 #问题
-CREATE TABLE  `question` (
- `id` VARCHAR( 64 ) NOT NULL ,
- `paper_id` VARCHAR( 64 ) NOT NULL ,
- `create_time` DATETIME NOT NULL ,
- `question_type` INT NOT NULL ,
- `question_title` VARCHAR( 128 ) NOT NULL ,
- `question_option` VARCHAR( 512 ) NOT NULL ,
-PRIMARY KEY (  `id` )
-) ENGINE = INNODB CHARACTER SET ucs2 COLLATE ucs2_general_ci;
+create table question
+(
+    id              varchar(64)  not null
+        primary key,
+    paper_id        varchar(64)  not null,
+    create_time     datetime     not null,
+    question_type   int          not null,
+    question_title  varchar(128) not null,
+    question_option varchar(512) not null
+)
+    charset = ucs2;
+
 
 
 #答题
-CREATE TABLE  `answer` (
- `id` VARCHAR( 64 ) NOT NULL ,
- `paper_id` VARCHAR( 64 ) NOT NULL ,
- `question_id` VARCHAR( 64 ) NOT NULL ,
- `question_type` INT NOT NULL ,
- `create_time` DATETIME NOT NULL ,
- `answer_content` VARCHAR( 512 ) NOT NULL ,
-PRIMARY KEY (  `id` )
-) ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+create table answer
+(
+    id             varchar(64)  not null
+        primary key,
+    paper_id       varchar(64)  not null,
+    question_id    varchar(64)  not null,
+    question_type  int          not null,
+    create_time    datetime     not null,
+    answer_content varchar(512) not null,
+    user_id        varchar(64)  null
+);
+
+#score
+create table score
+(
+    id    varchar(64) null,
+    score int         null,
+    time  datetime    null
+);
+
+
+create table user
+(
+    id            varchar(64)   not null
+        primary key,
+    username      varchar(64)   not null,
+    password      varchar(64)   not null,
+    email         varchar(64)   not null,
+    create_time   datetime      not null,
+    surgery_date  datetime      null,
+    status        int default 0 not null,
+    random_code   varchar(64)   not null,
+    parent_id     varchar(64)   null,
+    real_name     varchar(64)   null,
+    age           varchar(64)   null,
+    gender        varchar(64)   null,
+    education     varchar(64)   null,
+    race          varchar(64)   null,
+    smoke_history varchar(64)   null,
+    comorbidity   varchar(64)   null,
+    etoh_history  varchar(64)   null,
+    identity      int           null,
+    constraint random_code
+        unique (random_code)
+);
