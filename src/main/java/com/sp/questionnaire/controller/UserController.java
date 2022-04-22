@@ -486,6 +486,7 @@ public class UserController {
             map.put("rangesAll",scoreService.queryRange());
             return map;
         } else {  //invalid
+
             map.put("code", 2);
             map.put("msg", "invalid");
             return map;
