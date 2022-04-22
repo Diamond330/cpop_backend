@@ -91,6 +91,57 @@ public class UserController {
                     .setSurgeryDate(null)
                     .setIdentity(parentIdentity + 1)
                     .setStatus(0)
+                    .setDiagnosis(user.getDiagnosis())
+                    .setRandomCode(commonUtils.getUUID());
+
+            if (userService.insertUser(user)) {   //insert user success
+                //发送激活邮件
+                mailUtils.sendActivateMail(user.getEmail(), user.getEmail(), password);
+                map.put("code", 0);
+                map.put("msg", "ok");
+                map.put("data", 0);
+            } else {
+                map.put("code", 1);
+                map.put("msg", "insert database fail");
+            }
+        } else {    // user exists
+
+            map.put("code", 0);
+            map.put("msg", "user exist");
+            map.put("data", 1);
+        }
+        return map;
+    }
+
+    @ResponseBody//管理员直接加病人
+    @RequestMapping(value = "/api/v1/registerpatient", method = RequestMethod.POST)
+    public Map<String, Object> registerpatient(HttpServletRequest request, @Valid @RequestBody User user, BindingResult result) throws UnsupportedEncodingException, MessagingException {
+        //System.out.println("register: " + request.getSession().getId());
+
+        Map<String, Object> map = new HashMap<>();
+        if (result.hasErrors()) {
+            FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
+            map.put("msg", error.getDefaultMessage());//将错误信息放入msg
+            map.put("code", 2);
+            return map;
+        }
+        //user校验合法
+
+        System.out.println("==");
+        int parentIdentity = userService.queryUserByEmail(user.getDoctorEmail()).getIdentity();
+        String parentId = userService.queryUserByEmail(user.getDoctorEmail()).getId();
+        User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
+        String password = commonUtils.generatePassword();
+        System.out.println(password);
+        System.out.println(parentId);
+        if (user0 == null) {  //new user
+            user.setId(commonUtils.getUUID())
+                    .setPassword(commonUtils.encodeByMd5(password))
+                    .setCreateTime(new Date())
+                    .setParentId(parentId)
+                    .setSurgeryDate(null)
+                    .setIdentity(parentIdentity + 1)
+                    .setStatus(0)
                     .setRandomCode(commonUtils.getUUID());
 
             if (userService.insertUser(user)) {   //insert user success
@@ -164,9 +215,16 @@ public class UserController {
         //user校验合法
 
 //        User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
+        User user0;
+        if(user.getId() == null){
+            user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
 
-        User user0 = userService.queryUserByID(user.getId());//看看邮箱有没有被用过
+        }else{
+            user0 = userService.queryUserByID(user.getId());//看看邮箱有没有被用过
+        }
+        System.out.println(user0.getEthPartial());
         if (user0 == null) {  //new user
+            System.out.println("popo");
             user.setId(commonUtils.getUUID())
                     .setPassword(commonUtils.encodeByMd5(user.getPassword()))
                     .setCreateTime(new Date())
@@ -184,10 +242,12 @@ public class UserController {
                 map.put("msg", "insert database fail");
             }
         } else {    // user exists
-            System.out.println(user0.getAge());
+            System.out.println(user0.getId());
             if (user0.getStatus() == 0 || user0.getStatus() == 1) {//user not activate
                 user
+                        .setId(user0.getId())
                         .setSurgeryDate(user.getSurgeryDate())
+                        .setBirth(user.getBirth())
                         .setStatus(0)
                         .setRandomCode(commonUtils.getUUID())
                         .setRealName(user.getRealName())
@@ -198,7 +258,37 @@ public class UserController {
                         .setEducation(user.getEducation())
                         .setRace(user.getRace())
                         .setGender(user.getGender())
-                        .setIdentity(user.getIdentity());
+                        .setAlcohol(user.getAlcohol())
+                        .setTobacco(user.getTobacco())
+                        .setMedicalMorbidity(user.getMedicalMorbidity())
+                        .setSteriodHistory(user.getSteriodHistory())
+                        .setNumBurst(user.getNumBurst())
+                        .setIdentity(user.getIdentity())
+                        .setDiagnosis(user.getDiagnosis())
+                        .setDrinkNum(user.getDrinkNum())
+                        .setSmokeNum(user.getSmokeNum())
+                        .setAntrostomy(user.getAntrostomy())
+                        .setAntrostomyDir(user.getAntrostomyDir())
+                        .setEthPartial(user.getEthPartial())
+                        .setEthPartialDir(user.getEthPartialDir())
+                        .setTotal(user.getTotal())
+                        .setTotalDir(user.getTotalDir())
+                        .setSphenoidotomy(user.getSphenoidotomy())
+                        .setSphenoidotomyDir(user.getSphenoidotomyDir())
+                        .setMiddleTurbinate(user.getMiddleTurbinate())
+                        .setMiddleTurbinateDir(user.getMiddleTurbinateDir())
+                        .setInferiorTurbinate(user.getInferiorTurbinate())
+                        .setInferiorTurbinateDir(user.getInferiorTurbinateDir())
+                        .setDrafa(user.getDrafa())
+                        .setDrafaDir(user.getDrafaDir())
+                        .setDrafb(user.getDrafb())
+                        .setDrafbDir(user.getDrafbDir())
+                        .setDraf(user.getDraf())
+                        .setSeptoplasty(user.getSeptoplasty())
+                        .setSeptoplastyDir(user.getSeptoplastyDir())
+                        .setRevision(user.getRevision())
+                        .setRevisionDir(user.getRevisionDir())
+                ;
 
                 if (userService.updateUser(user)) {
                     // mailUtils.sendActivateMail(user.getEmail(), user.getUsername(), user.getRandomCode());
@@ -348,7 +438,8 @@ public class UserController {
             return map;
         }
         List<User> users = userService.queryUserByParent(code);
-
+        List<Integer> means = new ArrayList<>();
+        List<Integer> ranges = new ArrayList<>();
         //System.out.println(user0);
         JSONArray jsonArray = new JSONArray();
         if (!users.isEmpty()) {
@@ -358,7 +449,10 @@ public class UserController {
 
                 List<Integer> s=new ArrayList<>();
                 List<String> t=new ArrayList<>();
+                int sum = 0;
+                int num= scores.size();
                 for(Score score:scores){
+                    sum += score.getScore();
                     s.add(score.getScore());
                     t.add(commonUtils.getDateStringByDate(score.getTime()));
                 }
@@ -376,15 +470,21 @@ public class UserController {
                 jsonObject.put("surgeryDate", user.getSurgeryDate()==null?"":commonUtils.getDateStringByDate(user.getSurgeryDate()) );
                 jsonObject.put("score", s);
                 jsonObject.put("date", t);
+                jsonObject.put("range", s.get(s.size()-1) - s.get(0));
+                jsonObject.put("mean", sum / num);
                 jsonArray.add(jsonObject);
-                System.out.println(jsonArray);
+                means.add(sum / num);
+                ranges.add(s.get(s.size()-1) - s.get(0));
+
             }
             map.put("code", 0);
             map.put("msg", "ok");
             map.put("data", jsonArray);
+            map.put("means",means);
+            map.put("ranges",ranges);
+            map.put("meansAll",scoreService.queryMean());
+            map.put("rangesAll",scoreService.queryRange());
             return map;
-
-
         } else {  //invalid
             map.put("code", 2);
             map.put("msg", "invalid");

@@ -84,8 +84,9 @@ public class UserServiceImpl implements UserService {
     public boolean updateUser(User user) {
         if (user != null && !"".equals(user.getId())) {
             try {
-                System.out.println(user.getAge());
+
                 int i = userDao.updateUser(user);
+                System.out.println(i);
                 if (i == 1) {
                     return true;
                 } else {

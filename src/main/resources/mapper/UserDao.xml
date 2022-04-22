@@ -22,9 +22,9 @@
 
     <insert id="insertUser" keyProperty="id" keyColumn="id"
             parameterType="com.sp.questionnaire.entity.User">
-        INSERT INTO user(id, username,password, parent_id, email, identity, create_time,surgery_date,status,random_code)
+        INSERT INTO user(id, username,diagnosis,password, parent_id, email, identity, create_time,surgery_date,status,random_code)
         VALUES
-        (#{id}, #{username},#{password}, #{parentId}, #{email}, #{identity}, #{createTime},#{surgeryDate},#{status},#{randomCode})
+        (#{id}, #{username},#{diagnosis},#{password}, #{parentId}, #{email}, #{identity}, #{createTime},#{surgeryDate},#{status},#{randomCode})
     </insert>
 
     <update id="updateUser" parameterType="com.sp.questionnaire.entity.User">
@@ -34,6 +34,7 @@
             <if test="password != null">password = #{password},</if>
             <if test="age != null">age = #{age},</if>
             <if test="email != null">email = #{email},</if>
+            <if test="birth != null">birth = #{birth},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="surgeryDate != null">surgery_date = #{surgeryDate},</if>
             <if test="status != null">status = #{status},</if>
@@ -47,6 +48,39 @@
             <if test="smokeHistory != null">smoke_history = #{smokeHistory},</if>
             <if test="etohHistory != null">etoh_history = #{etohHistory},</if>
             <if test="comorbidity != null">comorbidity = #{comorbidity},</if>
+            <if test="tobacco != null">tobacco = #{tobacco},</if>
+            <if test="alcohol != null">alcohol = #{alcohol},</if>
+            <if test="medicalMorbidity != null">medical_morbidity = #{medicalMorbidity},</if>
+            <if test="steriodHistory != null">steriod_history = #{steriodHistory},</if>
+            <if test="numBurst != null">num_burst = #{numBurst},</if>
+            <if test="diagnosis != null">diagnosis = #{diagnosis},</if>
+            <if test="drinkNum != null">drink_num = #{drinkNum},</if>
+            <if test="smokeNum != null">smoke_num = #{smokeNum},</if>
+
+
+
+
+            <if test="antrostomy != null">antrostomy = #{antrostomy},</if>
+            <if test="antrostomyDir != null">antrostomy_dir = #{antrostomyDir},</if>
+            <if test="ethPartial != null">eth_partial = #{ethPartial},</if>
+            <if test="ethPartialDir != null">eth_partial_dir = #{ethPartialDir},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="totalDir != null">total_dir = #{totalDir},</if>
+            <if test="sphenoidotomy != null">sphenoidotomy = #{sphenoidotomy},</if>
+            <if test="sphenoidotomyDir != null">sphenoidotomy_dir = #{sphenoidotomyDir},</if>
+            <if test="middleTurbinate != null">middle_turbinate = #{middleTurbinate;},</if>
+            <if test="middleTurbinateDir != null">middle_turbinate_dir = #{middleTurbinateDir},</if>
+            <if test="inferiorTurbinate != null">inferior_turbinate = #{inferiorTurbinate},</if>
+            <if test="inferiorTurbinateDir != null">inferior_turbinate_dir = #{inferiorTurbinateDir},</if>
+            <if test="drafa != null">drafa = #{drafa},</if>
+            <if test="drafaDir != null">drafa_dir = #{drafaDir},</if>
+            <if test="drafb != null">drafb = #{drafb},</if>
+            <if test="drafbDir != null">drafb_dir = #{drafbDir},</if>
+            <if test="draf != null">draf = #{draf},</if>
+            <if test="septoplasty != null">septoplasty = #{septoplasty},</if>
+            <if test="septoplastyDir != null">septoplasty_dir = #{septoplastyDir},</if>
+            <if test="revision != null">revision = #{revision},</if>
+            <if test="revisionDir != null">revision_dir = #{revisionDir},</if>
         </set>
         WHERE id = #{id}
     </update>

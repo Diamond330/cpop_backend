@@ -175,7 +175,7 @@ public class PaperController {
     public Map<String, Object> updatePaper(HttpServletRequest request, @RequestBody UpdatePaperViewPaper paper) throws ParseException {
 
 //        User u = new User();
-//        u.setId("1");
+//        u.setId("1");F
 //        request.getSession().setAttribute("admin", u);
 //        request.setAttribute("session", request.getSession());
         User user = (User) request.getAttribute("admin");

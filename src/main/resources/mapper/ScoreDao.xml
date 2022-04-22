@@ -9,7 +9,16 @@
     <select id="queryScore" resultType="com.sp.questionnaire.entity.Score">
         SELECT id, score, time FROM score
         WHERE
-        id=#{id}
+        id=#{id} order by time asc
+    </select>
+
+    <select id="queryMean" resultType="java.lang.Integer">
+        SELECT AVG(score) FROM score
+
+    </select>
+    <select id="queryRange" resultType="java.lang.Integer">
+        SELECT MAX(score) - MIN(score) FROM score
+
     </select>
 
     <insert id="insertScore" keyProperty="id" keyColumn="id"

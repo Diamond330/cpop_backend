@@ -36,7 +36,8 @@ public class User<create_time> {
 //    @Email(message = "邮箱必须合法")
 //    @NotNull(message = "邮箱不能为空")
     private String email;// 邮箱
-
+    private String doctorEmail;// 邮箱
+    private Date birth;
     private Date createTime;//注册时间
     private Date surgeryDate;//最后登录时间
     private Integer status;//状态值：0：未激活1：已激活
@@ -51,7 +52,35 @@ public class User<create_time> {
     private String smokeHistory;
     private String etohHistory;
     private String comorbidity;//并发
-
+    private String tobacco;
+    private String alcohol;
+    private String medicalMorbidity;
+    private String steriodHistory;
+    private String numBurst;
+    private String diagnosis;
+    private String drinkNum;
+    private String smokeNum;
+    private String antrostomy;
+    private String antrostomyDir;
+    private String ethPartial;
+    private String ethPartialDir;
+    private String total;
+    private String totalDir;
+    private String sphenoidotomy;
+    private String sphenoidotomyDir;
+    private String middleTurbinate;
+    private String middleTurbinateDir;
+    private String inferiorTurbinate;
+    private String inferiorTurbinateDir;
+    private String drafa;
+    private String drafaDir;
+    private String drafb;
+    private String drafbDir;
+    private String draf;
+    private String septoplasty;
+    private String septoplastyDir;
+    private String revision;
+    private String revisionDir;
     private List<Integer> scores;
     private List<Date> time;
 

@@ -38,5 +38,14 @@ public class ScoreServiceImpl implements ScoreService {
     public List<Score> queryScore(String id) {
         return scoreDao.queryScore(id);
     }
+
+    @Override
+    public int queryMean() {
+        return scoreDao.queryMean();
+    }
+    @Override
+    public int queryRange() {
+        return scoreDao.queryRange();
+    }
 }
 

@@ -8,4 +8,6 @@ import java.util.List;
 public interface ScoreService {
     boolean insertScore(Score score);
     List<Score> queryScore(String id);
+    int queryMean();
+    int queryRange();
 }
