@@ -69,7 +69,7 @@ public class UserController {
         //System.out.println("register: " + request.getSession().getId());
 
         Map<String, Object> map = new HashMap<>();
-        if (result.hasErrors()||user.getParentId()==null) {
+        if (result.hasErrors() || user.getParentId() == null) {
             FieldError error = result.getFieldErrors().get(0);//获得第第一个错误
             map.put("msg", error.getDefaultMessage());//将错误信息放入msg
             map.put("code", 2);
@@ -96,7 +96,7 @@ public class UserController {
 
             if (userService.insertUser(user)) {   //insert user success
                 //发送激活邮件
-                mailUtils.sendActivateMail(user.getEmail(), user.getEmail(), password);
+                //mailUtils.sendActivateMail(user.getEmail(), user.getEmail(), password);
                 map.put("code", 0);
                 map.put("msg", "ok");
                 map.put("data", 0);
@@ -216,15 +216,15 @@ public class UserController {
 
 //        User user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
         User user0;
-        if(user.getId() == null){
+        if (user.getId() == null) {
+            System.out.println(user.getEmail());
             user0 = userService.queryUserByEmail(user.getEmail());//看看邮箱有没有被用过
 
-        }else{
+        } else {
             user0 = userService.queryUserByID(user.getId());//看看邮箱有没有被用过
         }
-        System.out.println(user0.getEthPartial());
+
         if (user0 == null) {  //new user
-            System.out.println("popo");
             user.setId(commonUtils.getUUID())
                     .setPassword(commonUtils.encodeByMd5(user.getPassword()))
                     .setCreateTime(new Date())
@@ -242,7 +242,7 @@ public class UserController {
                 map.put("msg", "insert database fail");
             }
         } else {    // user exists
-            System.out.println(user0.getId());
+//            System.out.println(user0.getId());
             if (user0.getStatus() == 0 || user0.getStatus() == 1) {//user not activate
                 user
                         .setId(user0.getId())
@@ -356,7 +356,9 @@ public class UserController {
                     json.put("identity", user0.getIdentity());
                     json.put("username", user0.getUsername());
                     json.put("email", user0.getEmail());
-                    json.put("surgeryDate",commonUtils.getDateStringByDate(user0.getSurgeryDate()));
+                    json.put("submitDate",user0.getSubmitTime() == null ? "":commonUtils.getDateStringByDate(user0.getSubmitTime()));
+                    System.out.println(user0.getSubmitTime());
+                    json.put("surgeryDate", commonUtils.getDateStringByDate(user0.getSurgeryDate()));
                     //登录成功，将user存入session中
                     request.getSession().setAttribute("admin", user0);
                     //update user last login time
@@ -427,6 +429,44 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/api/v1/queryself/{code}", method = RequestMethod.GET)
+    public Map<String, Object> queryPatientBySelfId(@PathVariable("code") String code) throws ParseException {
+        Map<String, Object> map = new HashMap<>();
+        if (code == null || code.length() < 10) {
+            map.put("code", 2);
+            map.put("msg", "id不能为空");
+            return map;
+        }
+        User user = userService.queryUserByID(code);
+        JSONArray jsonArray = new JSONArray();
+        if (user != null) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", user.getId());
+            jsonObject.put("name", user.getRealName() == null ? "" : user.getRealName());
+            jsonObject.put("birth", user.getBirth() == null ? "" : commonUtils.getDateStringByDate(user.getBirth()));
+            jsonObject.put("tobacco", user.getTobacco() == null ? "" : user.getTobacco());
+            jsonObject.put("alcohol", user.getAlcohol() == null ? "" : user.getAlcohol());
+            jsonObject.put("gender", user.getGender() == null ? "" : user.getGender());
+            jsonObject.put("medicalMorbidity", user.getMedicalMorbidity() == null ? "" : user.getMedicalMorbidity());
+            jsonObject.put("steriodHistory", user.getSteriodHistory() == null ? "" : user.getSteriodHistory());
+            jsonObject.put("numBurst", user.getNumBurst() == null ? "" : user.getNumBurst());
+            jsonObject.put("drinkNum", user.getDrinkNum() == null ? "" : user.getDrinkNum());
+            jsonObject.put("smokeNum", user.getSmokeNum() == null ? "" : user.getSmokeNum());
+            jsonObject.put("race", user.getRace() == null ? "" : user.getRace());
+            jsonObject.put("education", user.getEducation() == null ? "" : user.getEducation());
+            jsonObject.put("surgeryDate", user.getSurgeryDate() == null ? "" : commonUtils.getDateStringByDate(user.getSurgeryDate()));
+            jsonArray.add(jsonObject);
+            map.put("code", 0);
+            map.put("msg", "ok");
+            map.put("data", jsonArray);
+            return map;
+        } else {  //invalid
+            map.put("code", 2);
+            map.put("msg", "invalid");
+            return map;
+        }
+    }
+
 
     @RequestMapping(value = "/api/v1/querypatient/{code}", method = RequestMethod.GET)
     public Map<String, Object> queryPatientByParentId(@PathVariable("code") String code) throws ParseException {
@@ -444,14 +484,14 @@ public class UserController {
         JSONArray jsonArray = new JSONArray();
         if (!users.isEmpty()) {
             for (User user : users) {//遍历list，把Paper转换成PaperQueryView类型
-                UserQueryView userQueryView = new UserQueryView();
-                List<Score> scores =scoreService.queryScore(user.getId());
 
-                List<Integer> s=new ArrayList<>();
-                List<String> t=new ArrayList<>();
+                List<Score> scores = scoreService.queryScore(user.getId());
+
+                List<Integer> s = new ArrayList<>();
+                List<String> t = new ArrayList<>();
                 int sum = 0;
-                int num= scores.size();
-                for(Score score:scores){
+                int num = scores.size();
+                for (Score score : scores) {
                     sum += score.getScore();
                     s.add(score.getScore());
                     t.add(commonUtils.getDateStringByDate(score.getTime()));
@@ -459,31 +499,43 @@ public class UserController {
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", user.getId());
-                jsonObject.put("name", user.getRealName()==null?"":user.getRealName());
-                jsonObject.put("age", user.getAge()==null?"":user.getAge());
-                jsonObject.put("gender", user.getGender()==null?"":user.getGender());
-                jsonObject.put("race", user.getRace()==null?"":user.getRace());
-                jsonObject.put("education", user.getEducation()==null?"":user.getEducation());
-                jsonObject.put("etoh_history", user.getEtohHistory()==null?"":user.getEtohHistory());
-                jsonObject.put("smoke_history", user.getSmokeHistory()==null?"":user.getSmokeHistory());
-                jsonObject.put("comorbidity", user.getComorbidity()==null?"":user.getComorbidity());
-                jsonObject.put("surgeryDate", user.getSurgeryDate()==null?"":commonUtils.getDateStringByDate(user.getSurgeryDate()) );
+                jsonObject.put("name", user.getRealName() == null ? "" : user.getRealName());
+                jsonObject.put("age", user.getAge() == null ? "" : user.getAge());
+                jsonObject.put("birth", user.getBirth() == null ? "" : commonUtils.getDateStringByDate(user.getBirth()));
+                jsonObject.put("tobacco", user.getTobacco() == null ? "" : user.getTobacco());
+                jsonObject.put("alcohol", user.getAlcohol() == null ? "" : user.getAlcohol());
+                jsonObject.put("gender", user.getGender() == null ? "" : user.getGender());
+                jsonObject.put("medicalMorbidity", user.getMedicalMorbidity() == null ? "" : user.getMedicalMorbidity());
+                jsonObject.put("steriodHistory", user.getSteriodHistory() == null ? "" : user.getSteriodHistory());
+                jsonObject.put("numBurst", user.getNumBurst() == null ? "" : user.getNumBurst());
+                jsonObject.put("drinkNum", user.getDrinkNum() == null ? "" : user.getDrinkNum());
+                jsonObject.put("smokeNum", user.getSmokeNum() == null ? "" : user.getSmokeNum());
+
+                jsonObject.put("race", user.getRace() == null ? "" : user.getRace());
+                jsonObject.put("education", user.getEducation() == null ? "" : user.getEducation());
+//                jsonObject.put("etoh_history", user.getEtohHistory()==null?"":user.getEtohHistory());
+//                jsonObject.put("smoke_history", user.getSmokeHistory()==null?"":user.getSmokeHistory());
+//                jsonObject.put("comorbidity", user.getComorbidity()==null?"":user.getComorbidity());
+                jsonObject.put("surgeryDate", user.getSurgeryDate() == null ? "" : commonUtils.getDateStringByDate(user.getSurgeryDate()));
                 jsonObject.put("score", s);
                 jsonObject.put("date", t);
-                jsonObject.put("range", s.get(s.size()-1) - s.get(0));
-                jsonObject.put("mean", sum / num);
+
+                jsonObject.put("range", s.size() <= 1 ? 1 : s.get(s.size() - 1) - s.get(0));
+                jsonObject.put("mean", num == 0 ? 1 : sum / num);
                 jsonArray.add(jsonObject);
-                means.add(sum / num);
-                ranges.add(s.get(s.size()-1) - s.get(0));
+                means.add(num == 0 ? 1 : sum / num);
+                ranges.add(s.size() <= 1 ? 1 : s.get(s.size() - 1) - s.get(0));
 
             }
             map.put("code", 0);
             map.put("msg", "ok");
             map.put("data", jsonArray);
-            map.put("means",means);
-            map.put("ranges",ranges);
-            map.put("meansAll",scoreService.queryMean());
-            map.put("rangesAll",scoreService.queryRange());
+            map.put("means", means);
+            map.put("ranges", ranges);
+            map.put("numsAll",scoreService.queryNumAll());
+            map.put("meansAll", scoreService.queryMean());
+            map.put("rangesAll", scoreService.queryRange());
+            map.put("series",scoreService.queryStatic());
             return map;
         } else {  //invalid
 
@@ -511,29 +563,13 @@ public class UserController {
                 UserQueryView userQueryView = new UserQueryView();
                 userQueryView.setId(user.getId())
                         .setUsername(user.getUsername())
-//                        .setAge(user.getAge())
                         .setEmail(user.getEmail())
-//                        .setComorbidity(user.getComorbidity())
-//                        .setEducation(user.getEducation())
-//                        .setGender(user.getGender())
-//                        .setEtohHistory(user.getEtohHistory())
-//                        .setRace(user.getRace())
-                        .setName(user.getRealName())
-//                        .setSmokeHistory(user.getSmokeHistory())
-                ;
+                        .setName(user.getRealName());
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", userQueryView.getId());
                 jsonObject.put("name", userQueryView.getUsername());
                 jsonObject.put("real_name", userQueryView.getName());
-
-//                jsonObject.put("age", userQueryView.getAge());
-//                jsonObject.put("gender", userQueryView.getGender());
-//                jsonObject.put("race", userQueryView.getRace());
-//                jsonObject.put("education", userQueryView.getEducation());
-//                jsonObject.put("etoh_history", userQueryView.getEtohHistory());
-//                jsonObject.put("smoke_history", userQueryView.getSmokeHistory());
-//                jsonObject.put("comorbidity", userQueryView.getComorbidity());
                 jsonArray.add(jsonObject);
 
             }
@@ -667,10 +703,15 @@ public class UserController {
             map.put("code", 2);
             return map;
         }
+        User user = userService.queryUserByID(userId);
+        user.setSubmitTime(new Date());
+        userService.updateUser(user);
+
+
         String paperId = answer.getId();
         Paper paper = paperService.queryPaperByID(paperId);
         if (paper != null) {
-            Score score=new Score();
+            Score score = new Score();
             score.setId(answer.getPatientId());
             score.setScore(answer.getScore());
             scoreService.insertScore(score);

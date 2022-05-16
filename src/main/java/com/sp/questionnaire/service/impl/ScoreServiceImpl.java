@@ -8,8 +8,7 @@ import com.sp.questionnaire.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ScoreServiceImpl implements ScoreService {
@@ -46,6 +45,28 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public int queryRange() {
         return scoreDao.queryRange();
+    }
+
+    @Override
+    public int queryNumAll() {
+        return scoreDao.queryNumAll();
+    }
+
+    @Override
+    public List<Integer> queryStatic() {
+        Map<String,List<String>> res = new HashMap<>();
+        Map<String, Integer> map = scoreDao.queryStatic();
+        TreeMap<String, Integer> map0 = new TreeMap<>();
+
+        List<Integer> series = new LinkedList<>();
+
+        for(String key: map.keySet()){
+            map0.put(key,map.get(key));
+        }
+        for(String key: map0.keySet()){
+            series.add(map.get(key));
+        }
+        return series;
     }
 }
 

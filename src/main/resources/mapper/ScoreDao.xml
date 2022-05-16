@@ -21,6 +21,28 @@
 
     </select>
 
+    <select id="queryNumAll" resultType="java.lang.Integer">
+        SELECT count(distinct id) FROM score
+
+    </select>
+    <select id="queryStatic" parameterType="int" resultType="hashmap">
+        select sum(case  when score between 100 and 110 then 1 else 0 end) as 'a',
+                sum(case when score between 90 and 100 then 1 else 0 end) as 'b',
+                sum(case when score between 80 and 90 then 1 else 0 end) as 'c',
+                sum(case when score between 70 and 80 then 1 else 0 end) as 'd',
+                sum(case when score between 60 and 70 then 1 else 0 end) as 'e',
+                sum(case when score between 50 and 60 then 1 else 0 end) as 'f',
+                sum(case when score between 40 and 50 then 1 else 0 end) as 'g',
+                sum(case when score between 30 and 40 then 1 else 0 end) as 'h',
+                sum(case when score between 20 and 30 then 1 else 0 end) as 'i',
+                sum(case when score between 10 and 20 then 1 else 0 end) as 'j',
+                sum(case when score between 00 and 10 then 1 else 0 end) as 'k'
+        from score;
+
+    </select>
+
+
+
     <insert id="insertScore" keyProperty="id" keyColumn="id"
             parameterType="com.sp.questionnaire.entity.Score">
         INSERT INTO score(id, score, time)

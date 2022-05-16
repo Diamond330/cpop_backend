@@ -8,14 +8,19 @@
         SELECT id, username,password, email, create_time,surgery_date,status,random_code,real_name, age, gender, education, race, smoke_history, etoh_history, comorbidity FROM user
         ORDER BY id DESC
     </select>
+<!--    <select id="queryUserByParent" resultType="com.sp.questionnaire.entity.User">-->
+<!--        SELECT id,parent_id,username,email,surgery_date, real_name,education, age, gender, education,race,smoke_history,comorbidity,etoh_history FROM user-->
+<!--        WHERE-->
+<!--            parent_id=#{code}-->
+<!--    </select>-->
     <select id="queryUserByParent" resultType="com.sp.questionnaire.entity.User">
-        SELECT id,parent_id,username,email,surgery_date, real_name,education, age, gender, education,race,smoke_history,comorbidity,etoh_history FROM user
+        SELECT * FROM user
         WHERE
             parent_id=#{code}
     </select>
 
     <select id="queryUserByID" resultType="com.sp.questionnaire.entity.User">
-        SELECT id, username,password, identity,email, create_time,surgery_date,status,random_code,real_name, age, gender, education, race, smoke_history, etoh_history, comorbidity FROM user
+        SELECT * FROM user
         WHERE
         id=#{id}
     </select>
@@ -56,9 +61,7 @@
             <if test="diagnosis != null">diagnosis = #{diagnosis},</if>
             <if test="drinkNum != null">drink_num = #{drinkNum},</if>
             <if test="smokeNum != null">smoke_num = #{smokeNum},</if>
-
-
-
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
 
             <if test="antrostomy != null">antrostomy = #{antrostomy},</if>
             <if test="antrostomyDir != null">antrostomy_dir = #{antrostomyDir},</if>
@@ -68,7 +71,7 @@
             <if test="totalDir != null">total_dir = #{totalDir},</if>
             <if test="sphenoidotomy != null">sphenoidotomy = #{sphenoidotomy},</if>
             <if test="sphenoidotomyDir != null">sphenoidotomy_dir = #{sphenoidotomyDir},</if>
-            <if test="middleTurbinate != null">middle_turbinate = #{middleTurbinate;},</if>
+            <if test="middleTurbinate != null">middle_turbinate = #{middleTurbinate},</if>
             <if test="middleTurbinateDir != null">middle_turbinate_dir = #{middleTurbinateDir},</if>
             <if test="inferiorTurbinate != null">inferior_turbinate = #{inferiorTurbinate},</if>
             <if test="inferiorTurbinateDir != null">inferior_turbinate_dir = #{inferiorTurbinateDir},</if>
@@ -93,7 +96,7 @@
 
 
     <select id="queryUserByEmail" resultType="com.sp.questionnaire.entity.User">
-        SELECT id, username,password, identity,email, create_time,surgery_date,status,random_code FROM user
+        SELECT * FROM user
         WHERE
         email=#{email}
     </select>

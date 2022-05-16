@@ -39,6 +39,7 @@ public class User<create_time> {
     private String doctorEmail;// 邮箱
     private Date birth;
     private Date createTime;//注册时间
+    private Date submitTime;
     private Date surgeryDate;//最后登录时间
     private Integer status;//状态值：0：未激活1：已激活
     private Integer identity;//身份：0：医生 2：病人
@@ -83,5 +84,6 @@ public class User<create_time> {
     private String revisionDir;
     private List<Integer> scores;
     private List<Date> time;
+
 
 }
